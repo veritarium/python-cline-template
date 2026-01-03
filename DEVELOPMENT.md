@@ -21,9 +21,7 @@ Eine Aufgabe ist "fertig", wenn:
 
 - Das definierte Verhalten ist implementiert (Akzeptanzkriterien erfüllt).
 - Das Quality Gate ist grün:
-  - `ruff check .`
-  - `ruff format --check .`
-  - `python -m pytest`
+  - `.\scripts\check.ps1`
 - Neue/ändernde Logik hat Tests:
   - Feature: mind. 1 Test pro neuem Verhalten
   - Bugfix: Regression-Test, der vorher fehlschlägt
@@ -31,16 +29,17 @@ Eine Aufgabe ist "fertig", wenn:
 - Keine neuen Dependencies ohne explizite Freigabe.
 - Änderungen sind in kleinen, nachvollziehbaren Commits geschnitten.
 
-## Quality Gate (immer ausführen)
+## Quality Gate (Single Source of Truth)
 
-- **Lint**:
-  - `ruff check .`
-- **Format**:
-  - `ruff format --check .`
-- **Tests**:
-  - `python -m pytest`
+Immer ausführen:
+- `.\scripts\check.ps1`
 
-**Warum `python -m pytest`**: Damit ist klar, dass pytest in der aktiven Python‑Umgebung läuft.
+Dieses Skript prüft:
+- Ruff (lint): `ruff check .`
+- Ruff (format check): `ruff format --check .`
+- Tests: `python -m pytest`
+
+**Warum `.\scripts\check.ps1`**: Ein einziger Befehl, der robust unter Windows läuft (nutzt explizit `.venv\Scripts\python.exe` und `.venv\Scripts\ruff.exe`). Er liefert einen klaren Exit‑Code und ist ideal für CI, VS Code Tasks und Cline.
 
 ## Cline Scope & Safety
 
