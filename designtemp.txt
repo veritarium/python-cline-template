@@ -1970,13 +1970,13 @@ Repo python-cline-template publishen, Template‑Haken setzen, Test über „Use
 Punkt 13: Template‑Repo entpersonalisieren und vorbereiten (für Cline)
 Ziel
 
-Dein aktuelles Repo in C:\dev\projects\Dev_Proj_Cline_Setup soll als sauberes GitHub Template Repo funktionieren, ohne alte lokale Namen/Pfade. Gleichzeitig soll Bootstrap später zuverlässig “andocken” können, ohne dass README/Anleitungen zerstört werden.
+Dein aktuelles Repo in C:\dev\projects\python-cline-template soll als sauberes GitHub Template Repo funktionieren, ohne alte lokale Namen/Pfade. Gleichzeitig soll Bootstrap später zuverlässig “andocken” können, ohne dass README/Anleitungen zerstört werden.
 
 Warum dieser Punkt wichtig ist (Fehler, die wir vermeiden)
 
 Globales Ersetzen von Repo‑Name kann Anleitungen kaputt machen (“python-cline-template” soll im Template‑README stehen bleiben).
 
-Wenn der Template‑Name noch überall als alter Pfad steht (C:\dev\projects\Dev_Proj_Cline_Setup), wird jedes neue Projekt “falsch beschriftet”.
+Wenn der Template‑Name noch überall als alter Pfad steht (C:\dev\projects\python-cline-template), wird jedes neue Projekt “falsch beschriftet”.
 
 Bootstrap braucht stabile Anker: Platzhalter in Memory‑Bank sind viel robuster als “Suche nach altem Namen”.
 
@@ -1994,9 +1994,9 @@ Akzeptanzkriterien
 
 .\scripts\check.ps1 läuft grün (nach Änderungen).
 
-Repo‑Suche nach Dev_Proj_Cline_Setup findet keine Treffer mehr (oder nur noch in einer historischen Changelog‑Notiz, falls du sowas bewusst behältst).
+Repo‑Suche nach python-cline-template findet keine Treffer mehr (oder nur noch in einer historischen Changelog‑Notiz, falls du sowas bewusst behältst).
 
-Repo‑Suche nach C:\dev\projects\Dev_Proj_Cline_Setup findet keine Treffer.
+Repo‑Suche nach C:\dev\projects\python-cline-template findet keine Treffer.
 
 devproj/ bleibt unverändert (keine Rename‑Aktion, keine Import‑Änderungen).
 
@@ -2011,9 +2011,9 @@ Ziel: Das Repo wird ein GitHub Template (python-cline-template), ohne alte lokal
 
 Bitte mache zuerst nur eine Analyse und erstelle einen Plan (max 8 Schritte), dann liste genau auf:
 
-Wo kommt Dev_Proj_Cline_Setup noch vor?
+Wo kommt python-cline-template noch vor?
 
-Wo kommt der harte Pfad C:\dev\projects\Dev_Proj_Cline_Setup oder ähnliche lokale Pfade vor?
+Wo kommt der harte Pfad C:\dev\projects\python-cline-template oder ähnliche lokale Pfade vor?
 
 In welchen memory-bank/*.md Dateien sollen wir __PROJECT_NAME__ als Platzhalter einführen, damit ein späteres Bootstrap-Skript zuverlässig den Projektnamen setzen kann?
 
@@ -2379,7 +2379,7 @@ Kritische Hinterfragung
 Wenn Bootstrap blind Template‑Strings ersetzt, kann es die README‑Anleitung verändern.
 Das vermeiden wir so:
 
-Wir schreiben in der Template‑Doku nicht „Dev_Proj_Cline_Setup“, sondern nutzen Platzhalter:
+Wir schreiben in der Template‑Doku nicht „python-cline-template“, sondern nutzen Platzhalter:
 
 __PROJECT_NAME__
 
@@ -2554,7 +2554,7 @@ C:\dev\projects\_template_selftest_1
 
 Am zuverlässigsten ist Robocopy:
 
-$src = "C:\dev\projects\Dev_Proj_Cline_Setup"
+$src = "C:\dev\projects\python-cline-template"
 $dst = "C:\dev\projects\_template_selftest_1"
 
 robocopy $src $dst /E /XD ".git" ".venv" "__pycache__" ".pytest_cache" ".ruff_cache" ".mypy_cache" > $null
@@ -2627,7 +2627,7 @@ Weg A: VS Code „Publish to GitHub“
 
 Öffne in VS Code dein Template‑Repo:
 
-C:\dev\projects\Dev_Proj_Cline_Setup
+C:\dev\projects\python-cline-template
 
 Source Control (linke Seitenleiste) öffnen
 
@@ -2663,7 +2663,7 @@ NICHT „Initialize with README“ (du hast schon eins)
 
 Dann im Terminal:
 
-cd C:\dev\projects\Dev_Proj_Cline_Setup
+cd C:\dev\projects\python-cline-template
 git remote add origin https://github.com/veritarium/python-cline-template.git
 git branch -M main
 git push -u origin main
