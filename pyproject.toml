@@ -1,0 +1,82 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "dev-proj-cline-setup"
+version = "0.1.0"
+description = "A Python project demonstrating proper setup with virtual environment, testing, and code quality tools"
+readme = "README.md"
+authors = [
+    {name = "Developer", email = "developer@example.com"}
+]
+license = {text = "MIT"}
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
+keywords = ["template", "python", "development", "setup"]
+dependencies = [
+    "colorama>=0.4.6",
+    "pytest>=9.0.2",
+    "ruff>=0.14.10",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest-cov",
+    "black",
+    "mypy",
+]
+
+[project.urls]
+Homepage = "https://github.com/username/dev-proj-cline-setup"
+Repository = "https://github.com/username/dev-proj-cline-setup.git"
+Issues = "https://github.com/username/dev-proj-cline-setup/issues"
+
+[project.scripts]
+greet = "devproj.main:main"
+
+[tool.ruff]
+target-version = "py312"
+line-length = 88
+select = [
+    "E",  # pycodestyle errors
+    "W",  # pycodestyle warnings
+    "F",  # pyflakes
+    "I",  # isort
+    "B",  # flake8-bugbear
+    "C4", # flake8-comprehensions
+    "UP", # pyupgrade
+]
+ignore = [
+    "E501",  # line too long, handled by black
+    "B008",  # do not perform function calls in argument defaults
+]
+
+[tool.ruff.per-file-ignores]
+"test_*.py" = ["S101"]  # Ignore assert statements in tests
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+addopts = [
+    "--strict-markers",
+    "--strict-config",
+    "--tb=short",
+]
+markers = [
+    "slow: marks tests as slow (deselect with '-m \"not slow\"')",
+]
+
+[tool.setuptools]
+packages = ["."]
+
+[tool.setuptools.package-data]
+"*" = ["*.txt", "*.md"]
