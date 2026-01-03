@@ -1,6 +1,33 @@
-# Dev_Proj_Cline_Setup
+# __PROJECT_NAME__
 
 A Python project demonstrating proper setup with virtual environment, testing, and code quality tools.
+
+## Use this template
+
+This repository is a template for Python + VS Code + Cline on Windows.
+
+**Quick start:**
+1) Clone your new repository
+2) Run `.\scripts\bootstrap.ps1 -SetupVenv`
+3) Verify with `.\scripts\check.ps1`
+4) Commit changes
+
+For detailed instructions, see [TEMPLATE_USAGE.md](TEMPLATE_USAGE.md).
+
+Standard option (recommended start):
+- The Python package name stays `devproj`.
+- Bootstrap adapts only project name / docs / memory.
+
+Steps after creating a repo from this template and cloning it:
+1) `.\scripts\bootstrap.ps1 -SetupVenv` (creates .venv, installs tools, runs quality gate)
+2) `.\scripts\check.ps1` (verifies everything works)
+3) `git add -A && git commit -m "chore: bootstrap project"`
+
+For documentation-only updates (no venv):
+- `.\scripts\bootstrap.ps1` (replaces __PROJECT_NAME__ in text files)
+
+See `scripts/bootstrap.ps1 -?` for all options.
+
 
 ## Project Overview
 
@@ -29,7 +56,7 @@ This project serves as a template for Python development with modern tooling inc
 1. **Clone the repository** (if applicable):
    ```bash
    git clone <repository-url>
-   cd Dev_Proj_Cline_Setup
+   cd <project-folder>
    ```
 
 2. **Set up virtual environment**:
@@ -108,7 +135,7 @@ ruff check --fix .
 ## Project Structure
 
 ```
-Dev_Proj_Cline_Setup/
+__PROJECT_NAME__/
 ├── .venv/                 # Python virtual environment (gitignored)
 ├── .vscode/              # VS Code configuration
 │   └── settings.json    # Editor settings for Python development

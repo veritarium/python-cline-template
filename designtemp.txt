@@ -1917,3 +1917,1244 @@ Hier ist eine kompakte Daily Routine (10 Zeilen), die du ganz oben in DEVELOPMEN
 8) Wenn grün: kleiner Commit (logisch geschnitten).
 9) Wenn Kontext/Scope driftet: Plan Mode, Plan nachschärfen oder neuer Task + Status in memory-bank.
 10) PR: Cline schreibt PR-Text, du machst Review + finaler `.\scripts\check.ps1`.
+
+
+
+
+Gut – ich habe die Punkte ab 13 nochmal „kritisch“ durchdacht (Risiken: README wird versehentlich kaputt‑ersetzt, Template‑Name wird in Anleitungen überschrieben, zu invasive Paket‑Renames, zu viel Global-Search/Replace). Daraus habe ich einen saubereren Ablauf gemacht, der zu deiner gewählten Option passt:
+
+ 
+
+Gewählte Option (Startstandard): devproj bleibt überall gleich. Bootstrap passt nur Projektname/Docs/Memory an (plus optional venv + Tools + Quality Gate). Kein Paket‑Rename, keine Import‑Änderungen.
+
+ 
+
+Unten bekommst du:
+
+Einen Überblick aller neuen Punkte (damit der Ablauf klar ist)
+
+Punkt 13 vollständig (so kannst du ihn 1:1 an Cline geben)
+
+Die Schritte, die Cline typischerweise nicht sauber/zuverlässig erledigen kann (GitHub Web‑Settings, Template‑Haken setzen), kommen bewusst am Ende.
+
+Überblick: neue Punkte ab Punkt 13 (für euren Ablauf)
+
+Punkt 13 – Template‑Repo “entpersonalisieren” und vorbereiten
+Alt‑Namen/Pfade entfernen, Template‑Identität klar machen, Platzhalter __PROJECT_NAME__ dort einführen, wo Bootstrap später zuverlässig greifen soll (Memory Bank + ggf. README‑Vorlage). Keine Codeänderungen an devproj.
+
+ 
+
+Punkt 14 – Bootstrap‑Script als Standard einbauen
+scripts/bootstrap.ps1 erzeugen: Projektname aus Ordnername, nur Textdateien anfassen, Platzhalter ersetzen, optional .venv + ruff/pytest + check.ps1. Keine .py Änderungen.
+
+ 
+
+Punkt 15 – CI hinzufügen (GitHub Actions)
+.github/workflows/ci.yml: Ruff + pytest laufen bei push/PR, damit jedes abgeleitete Repo sofort Qualitätschecks hat.
+
+ 
+
+Punkt 16 – “Template Usage” Dokumentation finalisieren
+Kurze, eindeutige Doku: „Use this template → clone → bootstrap → check → commit“. Optional: BOOTSTRAP.md oder TEMPLATE_USAGE.md.
+
+ 
+
+Punkt 17 – Pre‑Publish Self‑Test lokal
+Ohne GitHub: Repo in neuen Ordner kopieren, Bootstrap laufen lassen, check grün, sicherstellen dass nur die erwarteten Dateien geändert werden.
+
+ 
+
+Punkt 18 – Manuelle GitHub‑Schritte (nicht für Cline)
+Repo python-cline-template publishen, Template‑Haken setzen, Test über „Use this template“ auf GitHub.
+
+Punkt 13: Template‑Repo entpersonalisieren und vorbereiten (für Cline)
+Ziel
+
+Dein aktuelles Repo in C:\dev\projects\Dev_Proj_Cline_Setup soll als sauberes GitHub Template Repo funktionieren, ohne alte lokale Namen/Pfade. Gleichzeitig soll Bootstrap später zuverlässig “andocken” können, ohne dass README/Anleitungen zerstört werden.
+
+Warum dieser Punkt wichtig ist (Fehler, die wir vermeiden)
+
+Globales Ersetzen von Repo‑Name kann Anleitungen kaputt machen (“python-cline-template” soll im Template‑README stehen bleiben).
+
+Wenn der Template‑Name noch überall als alter Pfad steht (C:\dev\projects\Dev_Proj_Cline_Setup), wird jedes neue Projekt “falsch beschriftet”.
+
+Bootstrap braucht stabile Anker: Platzhalter in Memory‑Bank sind viel robuster als “Suche nach altem Namen”.
+
+Deliverables (was am Ende existieren/korrekt sein muss)
+
+Keine hartcodierten Pfade/Alt‑Namen mehr in projektinternen Kontextdateien (Memory Bank, TechContext etc.).
+
+Memory‑Bank Dateien enthalten an sinnvollen Stellen __PROJECT_NAME__ (damit Bootstrap später sicher ersetzen kann).
+
+Ein README‑Setup, das Template klar erklärt, ohne sich selbst zu „personalisieren“.
+
+.\scripts\check.ps1 bleibt grün.
+
+Akzeptanzkriterien
+
+.\scripts\check.ps1 läuft grün (nach Änderungen).
+
+Repo‑Suche nach Dev_Proj_Cline_Setup findet keine Treffer mehr (oder nur noch in einer historischen Changelog‑Notiz, falls du sowas bewusst behältst).
+
+Repo‑Suche nach C:\dev\projects\Dev_Proj_Cline_Setup findet keine Treffer.
+
+devproj/ bleibt unverändert (keine Rename‑Aktion, keine Import‑Änderungen).
+
+Prompt für Cline (Punkt 13)
+
+Kopiere das in Cline Plan Mode:
+
+Punkt 13 – Template Repo vorbereiten (Plan Mode)
+Ziel: Das Repo wird ein GitHub Template (python-cline-template), ohne alte lokale Namen/Pfade. Wir verwenden die Option: Python-Paket bleibt devproj, keine Code-/Import-Renames.
+
+ 
+
+Bitte mache zuerst nur eine Analyse und erstelle einen Plan (max 8 Schritte), dann liste genau auf:
+
+Wo kommt Dev_Proj_Cline_Setup noch vor?
+
+Wo kommt der harte Pfad C:\dev\projects\Dev_Proj_Cline_Setup oder ähnliche lokale Pfade vor?
+
+In welchen memory-bank/*.md Dateien sollen wir __PROJECT_NAME__ als Platzhalter einführen, damit ein späteres Bootstrap-Skript zuverlässig den Projektnamen setzen kann?
+
+Welche README-Änderungen sind sinnvoll, damit das Repo als Template erklärt wird (ohne später beim Bootstrap “falsch” ersetzt zu werden)?
+
+Constraints:
+
+Keine Änderungen an Python-Code (*.py) in Punkt 13
+
+devproj bleibt unverändert
+
+Änderungen nur an Doku/Markdown/TOML/JSON/YAML, wenn nötig
+
+Am Ende: gib mir den Plan + eine Datei-Liste (welche Dateien du ändern würdest).
+
+Wenn Cline den Plan gezeigt hat und du zufrieden bist, wechselst du auf Act Mode und gibst:
+
+Punkt 13 – Umsetzung (Act Mode)
+Setze den Plan um. Keine Änderungen an *.py.
+Danach führe .\scripts\check.ps1 aus (erst nach meiner Freigabe).
+Zum Schluss: kurze Zusammenfassung + Liste der geänderten Dateien.
+
+Hinweis: Was Cline hier nicht machen muss/kann
+
+Nichts in GitHub anklicken. Keine Repo‑Erstellung. Kein Template‑Haken. Das kommt erst ganz am Ende (Punkt 18, manuell).
+
+Wenn du „Weiter“ schreibst, gebe ich dir Punkt 14 (Bootstrap‑Script als Standard, robust und bewusst nur für Textdateien/Memory/Docs, plus optional venv+Tools+check).
+
+weiter
+Thought for 1m 30s
+Punkt 14: Bootstrap‑Script als Standard einbauen
+Ziel
+
+Nach „Use this template“ + Clone soll der Nutzer im neuen Repo nur noch ausführen:
+
+.\scripts\bootstrap.ps1 -SetupVenv
+
+
+Und danach:
+
+Projektname/Docs/Memory passen zum Ordnernamen (oder Parameter),
+
+devproj bleibt unverändert,
+
+optional wird .venv erstellt, ruff/pytest installiert und .\scripts\check.ps1 läuft.
+
+Warum dieser Punkt wichtig ist (kritische Hinterfragung)
+
+Wir wollen vermeiden, dass das Script:
+
+versehentlich Python‑Code oder Imports verändert (deshalb keine .py Ersetzung),
+
+Anleitungen kaputt ersetzt („python-cline-template“ soll im Template‑README stehen bleiben),
+
+durch „Suche nach altem Projektnamen“ fragil wird.
+
+Deshalb setzen wir auf:
+
+Platzhalter __PROJECT_NAME__ in Memory/Doku (stabil),
+
+und nur als Fallback: Ersetzen alter/historischer Namen, aber sehr gezielt.
+
+Deliverables
+
+Datei: scripts/bootstrap.ps1 existiert und ist dokumentiert.
+
+Bootstrap ersetzt nur Textdateien (.md/.txt/.toml/.json/.yml/.yaml).
+
+Bootstrap ignoriert .git/, .venv/, Caches.
+
+Optionaler Setup‑Pfad: .venv erstellen, Tools installieren, check.ps1 laufen lassen.
+
+README erklärt den Standard‑Flow klar.
+
+Akzeptanzkriterien
+
+In einem frisch geklonten Repo führt .\scripts\bootstrap.ps1 zu nur erwarteten Änderungen (Docs/Memory), keine .py Änderungen.
+
+Mit -SetupVenv läuft am Ende .\scripts\check.ps1 grün (wenn das Projekt baseline grün ist).
+
+Script läuft ohne Adminrechte in PowerShell.
+
+Prompt für Cline (Punkt 14)
+14A – Plan Mode
+
+Kopiere in Cline Plan Mode:
+
+Punkt 14 – Bootstrap Script (Plan Mode)
+Ziel: scripts/bootstrap.ps1 als Standard-Bootstrap für Template-Repos.
+Gewählte Option: Python-Paket bleibt devproj (keine Code-Renames, keine Import-Renames).
+
+ 
+
+Anforderungen an bootstrap.ps1:
+
+ProjectName default = Ordnername des Repo-Root
+
+Nur Textdateien anfassen: .md, .txt, .toml, .json, .yml, .yaml
+
+In Textdateien __PROJECT_NAME__ durch ProjectName ersetzen
+
+Ignoriere: .git/, .venv/, pycache/, .pytest_cache/, .ruff_cache/
+
+Optionaler Schalter -SetupVenv:
+
+erstellt .venv, aktualisiert pip, installiert ruff+pytest (oder requirements-dev.txt), dann führt scripts/check.ps1 aus
+
+Das Script soll am Ende eine kurze “Next steps” Ausgabe drucken
+
+Bitte erstelle einen Plan (max 6 Schritte) und liste:
+
+Welche Datei(en) du anlegst/änderst (bootstrap.ps1, README ggf.)
+
+Welche Strings du NICHT ersetzen wirst (z. B. "python-cline-template" in Template-Anleitungen) und wie du das sicherstellst
+
+Wie du sicherstellst, dass keine *.py Dateien geändert werden
+
+Keine Änderungen ausführen, nur Plan.
+
+14B – Act Mode Umsetzung
+
+Wenn Plan ok, dann in Act Mode:
+
+Punkt 14 – Umsetzung (Act Mode)
+Erstelle/ändere die Dateien gemäß Plan:
+
+scripts/bootstrap.ps1
+
+README.md (falls nötig, kurze Template-Nutzung)
+
+Constraints:
+
+Keine Änderungen an *.py
+
+Keine Änderungen an scripts/check.ps1 außer du erklärst zwingend warum
+
+Danach: schlage mir vor, welche Commands ich ausführen soll, um zu testen (bootstrap ohne SetupVenv und bootstrap mit SetupVenv). Führe sie erst nach meiner Freigabe aus.
+Zum Schluss: Liste der geänderten Dateien.
+
+Nutzer‑Test (das machst du danach, nicht Cline)
+
+Nach der Umsetzung testest du lokal im Repo:
+
+Test 1: Bootstrap ohne venv‑Setup (soll nur Docs/Memory anfassen)
+.\scripts\bootstrap.ps1 -NonInteractive
+git status
+
+Test 2: Bootstrap mit SetupVenv (soll venv + Tools + check machen)
+.\scripts\bootstrap.ps1 -SetupVenv -NonInteractive
+
+
+Wichtig: Wenn .venv existiert, ist das ok lokal – aber sie darf nicht getrackt werden.
+
+Hinweis: Was wir bewusst NICHT tun
+
+Kein automatisches Umbenennen von devproj
+
+Kein Ersetzen in .py
+
+Kein “smartes” Refactoring. Bootstrap ist nur Initialisierung.
+
+Wenn du „Weiter“ schreibst, kommt Punkt 15: GitHub Actions CI hinzufügen (workflow Datei, so dass neue Projekte aus dem Template sofort automatische Checks bekommen).
+
+weiter
+Thought for 1m 17s
+Punkt 15: GitHub Actions CI hinzufügen (automatisches Quality Gate auf GitHub)
+Ziel
+
+Dein Template‑Repo (und jedes daraus erzeugte Repo) hat sofort CI: bei jedem Push/PR laufen Ruff + pytest automatisch. Das macht die Vorlage professionell und verhindert, dass man lokal „vergisst“ zu testen.
+
+ 
+
+Wir bauen CI so, dass sie:
+
+auf Ubuntu schnell prüft (ruff + pytest),
+
+optional auch auf Windows zusätzlich prüft, dass scripts/check.ps1 wirklich funktioniert.
+
+Kritische Hinterfragung (damit wir keine Fehler einbauen)
+
+CI darf nicht von deiner lokalen .venv abhängen → CI erstellt eine frische Umgebung.
+
+scripts/check.ps1 nutzt .venv\Scripts\... → auf Windows‑Runner müssen wir deshalb .venv explizit erstellen.
+
+Auf Linux gibt es kein .venv\Scripts\... → dort lieber direkt python -m ....
+
+Wir müssen sicherstellen, dass CI in einem neuen Projekt aus der Vorlage ohne weitere Anpassungen läuft:
+
+wenn requirements-dev.txt existiert → installiere daraus,
+
+sonst installiere ruff + pytest minimal.
+
+Deliverables
+
+Datei: .github/workflows/ci.yml
+
+CI läuft auf Push und PR
+
+CI ist grün (sofern lokal check.ps1 grün ist)
+
+Akzeptanzkriterien
+
+ci.yml ist im Repo und committed.
+
+Ein Push triggert Actions.
+
+CI läuft mindestens unter Ubuntu (empfohlen) – optional zusätzlich Windows.
+
+Bei einem absichtlichen Testfehler wird CI rot.
+
+Prompt für Cline (Punkt 15)
+15A – Plan Mode
+
+Kopiere in Cline Plan Mode:
+
+Punkt 15 – GitHub Actions CI (Plan Mode)
+Ziel: .github/workflows/ci.yml hinzufügen.
+CI soll laufen auf:
+
+ubuntu-latest (ruff + pytest)
+
+optional windows-latest (erstellt .venv, führt scripts/check.ps1 aus)
+
+Requirements:
+
+nutze Python 3.12
+
+installiere Abhängigkeiten aus requirements-dev.txt, wenn vorhanden, sonst installiere ruff und pytest
+
+keine Verwendung von lokaler .venv
+
+triggers: push, pull_request, workflow_dispatch
+
+Bitte gib einen Plan (max 4 Schritte) + den vollständigen YAML-Inhalt, den du anlegen willst. Keine Änderungen ausführen.
+
+15B – Act Mode Umsetzung
+
+Wenn Plan ok, dann in Act Mode:
+
+Punkt 15 – Umsetzung (Act Mode)
+Lege .github/workflows/ci.yml gemäß Plan an.
+Danach: liste die geänderten Dateien.
+Keine weiteren Änderungen.
+
+Empfohlener Workflow‑Inhalt (als Zielbild)
+
+Wenn Cline fragt „soll Windows‑Job rein?“:
+Ja, ich empfehle es, weil dein Template Windows‑optimiert ist (check.ps1). Das ist „pro“, und die Kosten sind gering.
+
+ 
+
+Das Ziel‑ci.yml soll in etwa so aussehen (Cline kann es 1:1 übernehmen):
+
+name: CI
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  quality:
+    name: Quality Gate (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: "pip"
+          cache-dependency-path: |
+            requirements-dev.txt
+            requirements.txt
+            pyproject.toml
+
+      - name: Install deps (Linux)
+        if: runner.os != 'Windows'
+        shell: bash
+        run: |
+          python -m pip install -U pip
+          if [ -f requirements-dev.txt ]; then
+            python -m pip install -r requirements-dev.txt
+          else
+            python -m pip install -U ruff pytest
+          fi
+
+      - name: Quality Gate (Linux)
+        if: runner.os != 'Windows'
+        shell: bash
+        run: |
+          python -m ruff check .
+          python -m ruff format --check .
+          python -m pytest
+
+      - name: Setup venv + deps (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          py -m venv .venv
+          .\.venv\Scripts\python.exe -m pip install -U pip setuptools wheel
+          if (Test-Path "requirements-dev.txt") {
+            .\.venv\Scripts\python.exe -m pip install -r requirements-dev.txt
+          } else {
+            .\.venv\Scripts\python.exe -m pip install -U ruff pytest
+          }
+
+      - name: Quality Gate (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: .\scripts\check.ps1
+
+Was Cline nicht kann / was du danach machen musst
+
+Cline kann die Datei anlegen und committen.
+
+Ausführen der GitHub Actions passiert erst nach Push.
+
+Den „Actions“ Tab prüfen machst du im Browser oder VS Code.
+
+Danach (du, Nutzer)
+
+Wenn Cline fertig ist:
+
+git status
+git add -A
+git commit -m "ci: add GitHub Actions quality gate"
+
+
+Wenn du „Weiter“ schreibst, kommt Punkt 16: Doku finalisieren (kleines TEMPLATE_USAGE.md oder BOOTSTRAP.md + README‑Abschnitt so, dass Bootstrap nicht versehentlich die Template‑Anleitung zerstört).
+
+weiter
+Thought for 1m 12s
+Punkt 16: Doku finalisieren (Template Usage + Bootstrap Usage, ohne “kaputt ersetzt” zu werden)
+Ziel
+
+Jeder (auch du in ein paar Wochen) versteht sofort:
+
+Repo ist ein Template
+
+Wie man daraus ein neues Projekt erzeugt
+
+Welche Option gilt: devproj bleibt
+
+Welche Commands sind Standard (bootstrap.ps1, check.ps1)
+
+Was nach Bootstrap zu committen ist
+
+Gleichzeitig vermeiden wir, dass Bootstrap aus Versehen die Template‑Anleitung „umbenennt“ oder unlesbar macht.
+
+Kritische Hinterfragung
+
+Wenn Bootstrap blind Template‑Strings ersetzt, kann es die README‑Anleitung verändern.
+Das vermeiden wir so:
+
+Wir schreiben in der Template‑Doku nicht „Dev_Proj_Cline_Setup“, sondern nutzen Platzhalter:
+
+__PROJECT_NAME__
+
+Und wir halten Template‑Doku bewusst generisch (nicht „python-cline-template überall“), sondern:
+
+„Dieses Repo ist eine Vorlage…“
+
+Damit kann Bootstrap problemlos __PROJECT_NAME__ ersetzen, ohne “eigene Identität” zu zerstören.
+
+Deliverables
+
+README enthält eine kurze „Use this template“ Sektion
+
+Neue Datei TEMPLATE_USAGE.md (oder BOOTSTRAP.md) erklärt den Ablauf in 10–20 Zeilen
+
+Memory Bank: projectbrief.md und activeContext.md sind als Template formuliert und enthalten __PROJECT_NAME__ (oder zumindest keine alten Namen)
+
+Akzeptanzkriterien
+
+Doku ist kurz, eindeutig, ohne lokale Pfade.
+
+Bootstrap verändert Doku sinnvoll (setzt ProjectName), aber zerstört sie nicht.
+
+.\scripts\check.ps1 bleibt grün.
+
+Prompt für Cline (Punkt 16)
+16A – Plan Mode
+
+In Cline Plan Mode:
+
+Punkt 16 – Template-Dokumentation (Plan Mode)
+Ziel: Dokumentation so gestalten, dass das Repo als Template funktioniert.
+Option: devproj bleibt überall gleich. Bootstrap passt nur Projektname/Docs/Memory an.
+
+ 
+
+Bitte plane (max 6 Schritte):
+
+Welche README-Änderung nötig ist (kurz, 8–12 Zeilen).
+
+Ob eine extra Datei TEMPLATE_USAGE.md oder BOOTSTRAP.md sinnvoll ist (eine wählen).
+
+Welche Memory-Bank Dateien als Template formuliert werden sollen, inkl. __PROJECT_NAME__.
+
+Constraints:
+
+Keine Änderungen an *.py
+
+Keine langen Texte; alles kurz und kopierbar
+
+Liefere mir am Ende:
+
+den finalen Textblock für README
+
+den kompletten Inhalt für die neue Datei
+
+welche Memory-Dateien du anpassen würdest
+
+16B – Act Mode Umsetzung
+
+Wenn Plan ok, dann Act Mode:
+
+Punkt 16 – Umsetzung (Act Mode)
+Setze den Plan um: README anpassen, neue Datei anlegen (wie geplant), Memory-Bank aktualisieren.
+Keine *.py Änderungen.
+Danach: Liste der geänderten Dateien. Keine weiteren Aktionen.
+
+Konkreter Zieltext, den du erwartest (als Orientierung)
+README‑Block (kurz)
+## Use this template
+
+Standard option (recommended start):
+- The Python package name stays `devproj`.
+- Bootstrap adapts only project name / docs / memory.
+
+Steps after creating a repo from this template and cloning it:
+1) .\scripts\bootstrap.ps1 -SetupVenv
+2) .\scripts\check.ps1
+3) git add -A && git commit -m "chore: bootstrap project"
+
+TEMPLATE_USAGE.md (sehr kurz)
+# Template usage
+
+This repository is a template for Python + VS Code + Cline on Windows.
+
+Standard option:
+- Keep Python package name `devproj` unchanged.
+- Bootstrap updates project name in docs/memory and can set up the venv.
+
+After cloning a new repo:
+1) .\scripts\bootstrap.ps1 -SetupVenv
+2) .\scripts\check.ps1
+3) Commit bootstrap changes
+
+If you only want doc updates:
+- .\scripts\bootstrap.ps1
+
+Danach (du, Nutzer)
+
+Nach Cline:
+
+git add -A
+git commit -m "docs: add template usage documentation"
+
+
+Wenn du „Weiter“ schreibst, kommt Punkt 17: Pre‑Publish Self‑Test lokal (wir simulieren „Use this template“ ohne GitHub, damit du vor dem Publish sicher bist, dass Bootstrap und Doku genau so funktionieren wie geplant).
+
+weiter
+Thought for 1m 5s
+Punkt 17: Pre‑Publish Self‑Test lokal (Template‑Flow ohne GitHub simulieren)
+Ziel
+
+Bevor du das Repo auf GitHub als Template veröffentlichst, willst du sicher wissen:
+
+Bootstrap funktioniert in einem „frischen Klon“‑Szenario
+
+Es werden nur Docs/Memory angepasst (keine .py)
+
+-SetupVenv macht .venv + Tools + check.ps1
+
+Nichts Unerwartetes wird geändert oder kaputt ersetzt
+
+Das ist der wichtigste Qualitätsschritt, weil er dir spätere Frustration erspart.
+
+Kritische Hinterfragung
+
+Viele Template‑Repos wirken erst „fertig“, bis man sie wirklich einmal in einen neuen Ordner legt und bootstrap ausführt. Typische Fehler, die hier auffallen:
+
+Script arbeitet relativ zu falschem Pfad
+
+Script ersetzt zu viel (z. B. Template‑Anleitung)
+
+Script findet requirements-dev.txt nicht
+
+.venv wird versehentlich getrackt
+
+Änderungen landen in .py obwohl sie nicht sollen
+
+Deliverables
+
+Ein lokaler „Simulations‑Ordner“, in dem du das Template einmal durchspielst
+
+Ein klarer Testablauf (2 Varianten: ohne SetupVenv, mit SetupVenv)
+
+Ein kurzer Nachweis: welche Dateien wurden geändert
+
+Akzeptanzkriterien
+
+bootstrap.ps1 ohne SetupVenv ändert nur Textdateien.
+
+bootstrap.ps1 -SetupVenv erstellt .venv und check.ps1 läuft grün.
+
+git status zeigt keine .venv‑Dateien als „tracked“.
+
+Keine .py Files sind im Diff.
+
+Dieser Punkt ist Nutzer‑Arbeit (nicht für Cline)
+
+Cline kann die Testschritte vorschlagen, aber du solltest das selbst im Terminal ausführen, weil es echte Dateikopien/Ordner betrifft.
+
+17.1 Test‑Ordner vorbereiten
+
+Wir simulieren „neues Projekt aus Template“ durch eine Kopie in einen neuen Ordner.
+
+ 
+
+Wähle einen Testnamen, z. B.:
+
+C:\dev\projects\_template_selftest_1
+
+17.2 Template in neuen Ordner kopieren (ohne .git und .venv)
+
+Am zuverlässigsten ist Robocopy:
+
+$src = "C:\dev\projects\Dev_Proj_Cline_Setup"
+$dst = "C:\dev\projects\_template_selftest_1"
+
+robocopy $src $dst /E /XD ".git" ".venv" "__pycache__" ".pytest_cache" ".ruff_cache" ".mypy_cache" > $null
+
+17.3 In den Testordner wechseln und Git initialisieren
+cd C:\dev\projects\_template_selftest_1
+git init
+git add -A
+git commit -m "chore: init selftest copy"
+
+17.4 Test 1: Bootstrap ohne SetupVenv (nur Docs/Memory)
+.\scripts\bootstrap.ps1 -NonInteractive
+git status
+
+
+Erwartung:
+
+Es gibt Änderungen in README.md, TEMPLATE_USAGE.md (oder BOOTSTRAP.md), memory-bank/*
+
+Keine Änderungen in *.py
+
+Prüfe explizit:
+
+git diff --name-only | findstr /I "\.py"
+
+
+Soll: keine Ausgabe.
+
+17.5 Test 2: Bootstrap mit SetupVenv
+.\scripts\bootstrap.ps1 -SetupVenv -NonInteractive
+
+
+Dann:
+
+.\scripts\check.ps1
+
+17.6 Sicherstellen, dass .venv nicht in Git gelandet ist
+git status
+git ls-files | findstr /I ".venv"
+
+
+Soll: .venv erscheint nicht in ls-files.
+
+17.7 Self‑Test Ergebnis dokumentieren (optional, aber hilfreich)
+
+Wenn alles passt, ist gut.
+Wenn nicht: du hast sofort klare Fehlerstellen (meist im Bootstrap‑Script oder in zu aggressiven Ersetzungen).
+
+Wenn etwas schiefgeht: typische Fixes
+
+Bootstrap ändert .py → Script muss .py strikt ausschließen (Filter prüfen)
+
+Bootstrap ersetzt „zu viel“ im README → nutze Platzhalter __PROJECT_NAME__ statt Template‑Name
+
+check.ps1 rot → fehlt requirements-dev.txt oder ruff/pytest nicht installiert → SetupVenv‑Teil prüfen
+
+Wenn du „Weiter“ schreibst, kommt Punkt 18: Manuelle GitHub‑Schritte (Publish als python-cline-template, Template‑Haken setzen, Test über „Use this template“). Diese Schritte kann Cline nicht zuverlässig ausführen, deswegen stehen sie bewusst am Schluss.
+
+weiter
+Thought for 1m 41s
+Punkt 18: Manuelle GitHub‑Schritte (Publish, Template aktivieren, End‑to‑End Test)
+
+Diese Schritte kann Cline nicht zuverlässig „klicken“/ausführen, deshalb sind sie am Schluss und als Nutzer‑Checkliste formuliert.
+
+18.1 Repo als python-cline-template auf GitHub veröffentlichen
+
+Du hast zwei Wege. Da VS Code bei dir schon mit GitHub verbunden ist (User veritarium), ist Weg A am bequemsten.
+
+Weg A: VS Code „Publish to GitHub“
+
+Öffne in VS Code dein Template‑Repo:
+
+C:\dev\projects\Dev_Proj_Cline_Setup
+
+Source Control (linke Seitenleiste) öffnen
+
+Wenn noch kein Remote existiert:
+
+Klick Publish to GitHub
+
+Name: python-cline-template
+
+Account: veritarium
+
+Public/Private auswählen
+
+Publish
+
+Danach im Terminal prüfen:
+
+git remote -v
+git branch --show-current
+
+
+Push (falls VS Code es nicht automatisch gemacht hat):
+
+git push -u origin main
+
+Weg B: Remote manuell setzen (falls du lieber über Git arbeitest)
+
+GitHub im Browser → „New repository“
+
+Name: python-cline-template
+
+NICHT „Initialize with README“ (du hast schon eins)
+
+Dann im Terminal:
+
+cd C:\dev\projects\Dev_Proj_Cline_Setup
+git remote add origin https://github.com/veritarium/python-cline-template.git
+git branch -M main
+git push -u origin main
+
+18.2 Repo als Template markieren
+
+Auf GitHub:
+
+Repo python-cline-template öffnen
+
+Settings
+
+Bereich Template repository
+
+Haken setzen
+
+Optional (empfohlen):
+
+Description setzen
+
+Topics: python, template, vscode, cline, ruff, pytest
+
+18.3 End‑to‑End Test über „Use this template“
+
+Jetzt testest du den echten Ziel‑Flow:
+
+18.3.1 Neues Repo aus Template erstellen
+
+GitHub → python-cline-template → Use this template
+Repo‑Name: z. B. template-e2e-test-1
+
+18.3.2 Lokal klonen
+cd C:\dev\projects
+git clone https://github.com/veritarium/template-e2e-test-1.git
+cd template-e2e-test-1
+
+18.3.3 Bootstrap ausführen (Standard‑Option: devproj bleibt)
+.\scripts\bootstrap.ps1 -SetupVenv -NonInteractive
+
+18.3.4 Bootstrap‑Änderungen committen und pushen
+git add -A
+git commit -m "chore: bootstrap project"
+git push
+
+18.4 CI prüfen (wenn du Punkt 15 umgesetzt hast)
+
+Auf GitHub im Repo template-e2e-test-1:
+
+Tab Actions öffnen
+
+Erwartung: Workflow läuft grün
+
+Wenn CI rot:
+
+Logs öffnen
+
+Meistens ist es ein fehlendes requirements-dev.txt oder ein Konfig‑Pfadproblem.
+
+Fix kommt dann in die Template‑Repo, nicht im abgeleiteten Projekt (damit es für alle künftig passt).
+
+18.5 Definition „fertig“ für die Template‑Einführung
+
+Du bist mit dem ganzen Template‑Projekt fertig, wenn:
+
+python-cline-template ist auf GitHub
+
+Template‑Haken ist gesetzt
+
+„Use this template“ → Clone → bootstrap.ps1 -SetupVenv → check.ps1 klappt
+
+(optional) CI läuft grün
+
+Was danach dein Standard‑Workflow ist (kurz)
+
+Für jedes neue Projekt:
+
+GitHub → Use this template
+
+Clone nach C:\dev\projects\<neuer-name>
+
+.\scripts\bootstrap.ps1 -SetupVenv -NonInteractive
+
+Commit & push
+
+Ab da: Plan/Act + .\scripts\check.ps1
+
+Wenn du möchtest, kann ich als nächstes noch einen Punkt 19 hinzufügen: „Template‑Wartung“ (wie du Verbesserungen am Template machst, ohne bestehende Projekte zu brechen, und wie du Updates sauber in einzelne Projekte zurückportierst).
+
+ja
+Thought for 1m 21s
+Punkt 19: Template‑Wartung und Updates in bestehende Projekte zurückspielen
+Ziel
+
+Du willst dein Template weiter verbessern (Scripts, Rules, CI, Doku), ohne Chaos zu erzeugen – und du willst bei Bedarf Verbesserungen in bestehende Projekte übernehmen, aber kontrolliert.
+
+ 
+
+Wichtiges Prinzip:
+Ein Template ist kein Paketmanager. Es updatet abgeleitete Repos nicht automatisch. Updates passieren bewusst und gezielt.
+
+19.1 Was darf sich im Template ändern, ohne Projekte zu „brechen“?
+Sehr safe zu ändern (empfohlen)
+
+DEVELOPMENT.md
+
+TEMPLATE_USAGE.md / BOOTSTRAP.md
+
+.clinerules/* (solange sie nicht plötzlich Dinge verlangen, die alte Projekte nicht erfüllen können)
+
+.clineignore
+
+scripts/check.ps1 (wenn du abwärtskompatibel bleibst)
+
+scripts/bootstrap.ps1
+
+.github/workflows/ci.yml (für neue Projekte aus Template)
+
+Vorsicht (kann brechen)
+
+pyproject.toml (Lint-/Formatregeln können viele Diffs erzeugen)
+
+Repo‑Struktur (Ordner verschieben)
+
+Python‑Paketlayout (z. B. später doch devproj umbenennen)
+
+„Quality Gate“ härter machen (z. B. neue zwingende Checks), wenn alte Projekte das nicht haben
+
+Empfehlung: Alles, was viele Diffs auslöst, nur in „Major Update“-Wellen.
+
+19.2 Versionierung für das Template (damit du weißt, was du wann genutzt hast)
+Minimal (reicht oft)
+
+Tagge Template‑Releases in Git:
+
+v0.1-template
+
+v0.2-template
+
+Beispiel:
+
+git tag v0.1-template
+git push origin v0.1-template
+
+Pro-Variante (wenn du viele Projekte hast)
+
+Führe in der Template‑Repo eine Datei ein: TEMPLATE_VERSION.txt
+
+Inhalt: 0.2
+
+Bootstrap kann in neuen Projekten optional eine Datei anlegen:
+
+TEMPLATE_USED.txt oder TEMPLATE_ORIGIN.txt
+
+z. B. „created from python-cline-template v0.2-template“
+
+Das ist Gold wert, wenn du später ein altes Projekt siehst und wissen willst, auf welchem Stand es gestartet ist.
+
+19.3 Wie du Updates in ein bestehendes Projekt übernimmst (kontrolliert)
+Empfohlener Workflow (immer so)
+
+Im Zielprojekt einen Branch erstellen:
+
+git checkout -b chore/template-sync-<datum>
+
+
+Aus dem Template nur die „safe“ Dateien übernehmen (kein Code):
+
+scripts/check.ps1
+
+scripts/bootstrap.ps1 (optional)
+
+.clinerules/
+
+.clineignore
+
+.github/workflows/ci.yml (optional)
+
+DEVELOPMENT.md / TEMPLATE_USAGE.md (optional)
+
+Danach:
+
+.\scripts\check.ps1
+
+
+Commit:
+
+git add -A
+git commit -m "chore: sync template tooling and rules"
+
+
+PR / Merge.
+
+19.4 Praktische Methoden, um Dateien zu übernehmen
+Methode A: „Copy/Paste + Diff“ (einfach, sehr zuverlässig)
+
+Öffne Template‑Repo und Zielprojekt nebeneinander in VS Code
+
+kopiere Datei
+
+nutze VS Code „Compare“ (rechtsklick) wenn du prüfen willst
+
+Methode B: Git‑Checkout einzelner Dateien aus dem Template‑Repo (sehr sauber)
+
+Wenn Template‑Repo als Remote hinzugefügt wird (einmalig):
+
+git remote add template https://github.com/veritarium/python-cline-template.git
+git fetch template
+
+
+Dann kannst du einzelne Dateien übernehmen:
+
+git checkout template/main -- scripts/check.ps1 .clineignore
+git checkout template/main -- .clinerules
+git checkout template/main -- .github/workflows/ci.yml
+
+
+Das ist extrem kontrolliert: du holst nur die Dateien, die du willst.
+
+19.5 „Policy“: Was du niemals automatisch updatest
+
+Damit es stabil bleibt:
+
+keine automatischen Code‑Refactors in bestehenden Projekten
+
+kein automatisches Umbenennen von devproj in bestehenden Projekten
+
+keine „random“ Änderungen in pyproject.toml, außer du machst bewusst einen Lint/Format‑Change und planst die Diffs ein
+
+19.6 Typische Weiterentwicklungsschritte fürs Template (Roadmap)
+
+Wenn du nach den ersten 3–5 Projekten merkst „immer wieder das gleiche“, sind das gute Kandidaten fürs Template:
+
+scripts/check.ps1 erweitert um optional:
+
+python -m pip check
+
+Coverage
+
+pre-commit Integration (als optionaler Standard)
+
+Makefile Ersatz für Windows (z. B. scripts/tasks.ps1)
+
+CI schneller machen (Cache optimieren)
+
+„Project init“ verbessern:
+
+Bootstrap schreibt memory-bank/projectbrief.md initial mit Projektname
+
+Bootstrap setzt progress.md auf „Initialized“
+
+Alles weiterhin ohne Code‑Rename.
+
+19.7 Was Cline dabei machen kann (und was nicht)
+Kann Cline gut
+
+.clinerules, .clineignore, Docs, Scripts verbessern
+
+CI‑Workflow Dateien erstellen
+
+kontrollierte Diff‑Checks, „was würde sich ändern“
+
+Nicht zuverlässig / nicht sinnvoll (für Cline)
+
+GitHub UI Aktionen (Template‑Haken setzen, Repo Settings)
+
+Große automatische „Syncs“ über viele Repos ohne deine Kontrolle
+
+Ergebnis von Punkt 19
+
+Du hast jetzt ein klares Wartungsmodell:
+
+Template wird verbessert und getaggt
+
+Neue Projekte starten sauber
+
+Bestehende Projekte bekommen Updates nur gezielt, über Branch + check.ps1 + Commit
+
+Wenn du willst, kann ich daraus als letzten Bonus noch Punkt 20 machen: „Minimaler Release‑Prozess für das Template“ (Tagging, CHANGELOG.md, und eine kurze Checkliste vor jedem Template‑Release).
+
+ja
+Thought for 1m 40s
+Punkt 20: Minimaler Release‑Prozess für dein Template (Tags, Changelog, Release‑Checkliste)
+Ziel
+
+Du willst Template‑Änderungen nicht „irgendwie“ pushen, sondern in kleinen, nachvollziehbaren Releases veröffentlichen, damit du später weißt:
+
+welche Version du wann hattest,
+
+was sich geändert hat,
+
+ob ein neues Projekt wirklich auf dem erwarteten Stand basiert.
+
+Das ist besonders hilfreich, sobald du mehr als 2–3 Projekte aus der Vorlage erzeugst.
+
+20.1 Dateien einführen: CHANGELOG.md und TEMPLATE_VERSION.txt
+TEMPLATE_VERSION.txt
+
+Eine Zeile, z. B.:
+
+0.2
+
+
+Das ist die maschinenlesbare Version.
+
+CHANGELOG.md
+
+Minimal und praktisch:
+
+# Changelog
+
+## 0.2
+- Add bootstrap script for template init (docs/memory + optional venv setup)
+- Add GitHub Actions CI quality gate
+- Improve template usage documentation
+
+## 0.1
+- Initial template: Windows + VS Code + Python + Cline workflow
+- scripts/check.ps1 and scripts/fix.ps1
+- .clinerules, .clineignore, memory-bank
+
+
+Warum das reicht:
+
+Du brauchst keine perfekte Release‑Doku – nur „was hat sich geändert“.
+
+20.2 Release‑Checkliste (vor jedem Template‑Release)
+
+Das ist die „Sachrunde“ bevor du taggst:
+
+Working tree clean
+
+git status
+
+
+Quality Gate grün
+
+.\scripts\check.ps1
+
+
+Bootstrap Self‑Test (wenn du ihn geändert hast)
+
+lokal kopieren oder GitHub “Use this template” Test (dein Punkt 17/18)
+
+.\scripts\bootstrap.ps1 -SetupVenv -NonInteractive
+
+Docs konsistent
+
+README enthält Template‑Anleitung
+
+TEMPLATE_USAGE/BOOTSTRAP.md aktuell
+
+Memory Bank enthält keine lokalen Pfade
+
+CI grün (wenn vorhanden)
+
+GitHub Actions letzter Run grün
+
+20.3 Version bump (einfaches Schema)
+
+Empfehlung, um es simpel zu halten:
+
+0.1, 0.2, 0.3 … solange du noch viel am Grundgerüst drehst.
+
+Später ggf. 1.0, wenn du „stabil“ bist.
+
+Ablauf:
+
+TEMPLATE_VERSION.txt erhöhen
+
+CHANGELOG.md ergänzen
+
+committen
+
+Beispiel:
+
+git add TEMPLATE_VERSION.txt CHANGELOG.md
+git commit -m "chore: release 0.2"
+
+20.4 Tag erstellen und pushen
+
+Tag‑Name (empfohlen):
+
+v0.2-template
+
+Commands:
+
+git tag v0.2-template
+git push origin v0.2-template
+
+
+Optional zusätzlich:
+
+git push
+
+20.5 GitHub Release (optional)
+
+Auf GitHub kannst du aus dem Tag direkt einen Release erzeugen:
+
+Releases → Draft new release → Tag auswählen → kurze Notes aus dem Changelog
+
+Das ist optional, aber nett, weil es die Version sichtbarer macht.
+
+20.6 Bonus: “Welche Template‑Version wurde in einem Projekt benutzt?”
+
+Weil GitHub beim „Use this template“ nicht automatisch „Template Version“ ins neue Repo schreibt, hast du zwei Optionen:
+
+Option A (manuell, simpel)
+
+Nach dem Erstellen eines neuen Projekts:
+
+Du schreibst einmal in memory-bank/projectbrief.md:
+
+„Created from python-cline-template v0.2-template“
+
+Option B (kleiner Bootstrap‑Upgrade, später)
+
+Bootstrap kann am Ende eine Datei schreiben:
+
+TEMPLATE_ORIGIN.txt mit:
+
+Repo‑Name + Datum + Template‑Version
+
+Das ist nice-to-have. Du musst das nicht sofort machen.
+
+Ergebnis von Punkt 20
+
+Du hast einen minimalen, aber professionellen Release‑Prozess:
+
+Versionfile
+
+Changelog
+
+Checkliste
+
+Tags
+
+Damit bleibt dein Template langfristig wartbar und nachvollziehbar.
+
+Wenn du willst, kann ich dir jetzt aus Punkt 13–20 noch eine komprimierte Master‑Liste machen (nur die Titel + 1 Satz je Punkt), die du Cline als „Projektplan“ geben kannst, bevor ihr Punkt für Punkt in Plan/Act geht.
+
+ja
+Thought for 54 seconds
+
+Hier ist die komprimierte Master‑Liste (Punkt 13–20), so dass du sie Cline als Gesamtplan geben kannst – und danach arbeitet ihr wirklich Punkt für Punkt ab.
+
+Master‑Liste Punkt 13–20
+
+Punkt 13 – Template‑Repo vorbereiten und entpersonalisieren
+Alte Namen/Pfade entfernen, Memory‑Bank als Template formulieren, __PROJECT_NAME__ als Platzhalter einführen, keine .py Änderungen.
+
+ 
+
+Punkt 14 – Bootstrap‑Script als Standard integrieren
+scripts/bootstrap.ps1 erstellen: Projektname aus Ordnername, nur Textdateien anfassen, Platzhalter ersetzen, optional .venv+Tools+check.ps1.
+
+ 
+
+Punkt 15 – GitHub Actions CI hinzufügen
+.github/workflows/ci.yml anlegen: Ruff + pytest auf Ubuntu (und optional Windows mit .venv + check.ps1).
+
+ 
+
+Punkt 16 – Template‑Doku finalisieren
+README‑Block „Use this template“ + kurze Datei TEMPLATE_USAGE.md/BOOTSTRAP.md, ohne lokale Pfade, so dass Bootstrap nichts zerstört.
+
+ 
+
+Punkt 17 – Lokaler Self‑Test vor dem Publish
+Template in neuen Ordner kopieren (ohne .git/.venv), bootstrap.ps1 laufen lassen (ohne/mit -SetupVenv), prüfen: keine .py Änderungen, check.ps1 grün.
+
+ 
+
+Punkt 18 – Manuell auf GitHub veröffentlichen und als Template markieren
+Repo python-cline-template publishen, Template‑Haken setzen, End‑to‑End Test über „Use this template“ + clone + bootstrap + commit/push.
+
+ 
+
+Punkt 19 – Wartungsmodell für Updates
+Template weiterentwickeln, tags/versionieren, Updates in bestehende Projekte nur gezielt (Branch + einzelne Dateien übernehmen + check.ps1).
+
+ 
+
+Punkt 20 – Minimaler Release‑Prozess
+TEMPLATE_VERSION.txt + CHANGELOG.md, Release‑Checkliste, Tagging (vX.Y-template), optional GitHub Release.
+
+Hinweis für deinen Ablauf mit Cline
+
+Punkt 13–16: Cline kann das gut umsetzen (Docs/Scripts/Workflows).
+
+Punkt 17: ist überwiegend Nutzer‑Arbeit (Kopieren/Simulation), Cline kann nur anleiten.
+
+Punkt 18: GitHub UI ist Nutzer‑Arbeit (Publish/Settings/Template‑Haken).
+
+Punkt 19–20: Cline kann Dateien erstellen (Changelog/Version), aber das Release/Tagging machst du am besten bewusst.

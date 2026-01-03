@@ -3,3 +3,5 @@
 - Scope (what it does): Provides a template for Python development with Cline workflow integration
 - Non-goals: Production deployment, complex application logic
 - Definition of Done (summary): Feature implemented, tests pass, quality gate green, no side-refactors
+- Template note: Created from python-cline-template
+- Project name: __PROJECT_NAME__

@@ -1,4 +1,4 @@
-# Bootstrap Guide for Dev_Proj_Cline_Setup
+# Bootstrap Guide for __PROJECT_NAME__
 
 This document describes how to bootstrap the development environment for this project.
 
@@ -13,8 +13,8 @@ This document describes how to bootstrap the development environment for this pr
 ### 1. Clone and navigate to project
 ```powershell
 cd C:\dev\projects
-git clone <repository-url> Dev_Proj_Cline_Setup
-cd Dev_Proj_Cline_Setup
+git clone <repository-url> <project-folder>
+cd <project-folder>
 ```
 
 ### 2. Create and activate virtual environment
@@ -87,7 +87,7 @@ This project implements a structured Cline workflow:
 ## Project Structure
 
 ```
-Dev_Proj_Cline_Setup/
+__PROJECT_NAME__/
 ├── .venv/                 # Python virtual environment (gitignored)
 ├── devproj/              # Main package
 │   ├── __init__.py       # Package metadata

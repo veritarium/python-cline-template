@@ -1,4 +1,4 @@
-# Development dependencies for Dev_Proj_Cline_Setup
+# Development dependencies for __PROJECT_NAME__
 # Install with: python -m pip install -r requirements-dev.txt
 
 # Code quality and formatting

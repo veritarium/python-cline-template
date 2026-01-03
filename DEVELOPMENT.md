@@ -44,7 +44,7 @@ Dieses Skript prüft:
 ## Cline Scope & Safety
 
 - **Standard**: Plan Mode zuerst. Act Mode erst nach Plan-Freigabe.
-- **Cline darf nur im Workspace arbeiten** (keine Dateien außerhalb von `c:/dev/projects/Dev_Proj_Cline_Setup`).
+- **Cline darf nur im Workspace arbeiten** (keine Dateien außerhalb des Projektordners).
 - **Keine neuen Dependencies** ohne explizites OK von mir.
 - **Keine Änderungen an Projekt-/Tooling-Konfig** (`pyproject.toml`, CI, pre-commit, etc.) ohne Nachfrage.
 - **Keine Neben-Refactors**. Nur Änderungen, die zur Aufgabe gehören.
