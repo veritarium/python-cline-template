@@ -2,6 +2,19 @@
 
 Dieses Dokument definiert die Spielregeln für die Zusammenarbeit zwischen Entwickler und Cline. Es sorgt für klare Aufgaben, stabile Ergebnisse und verhindert typische Agent-Fehler.
 
+## Daily Routine (Cline + Python, Windows)
+
+1) Repo öffnen (C:\dev\projects\...), `git status` prüfen (clean bevorzugt).
+2) In Feature-Branch wechseln/erstellen.
+3) Baseline: `.\scripts\check.ps1` (muss grün sein, bevor KI ändert).
+4) Cline starten → Plan Mode: Ziel + Akzeptanz + Nicht-Ziele → Plan (max 10 Schritte).
+5) Plan prüfen (Scope, Tests, Risiken). Erst dann Act Mode.
+6) Act Mode: immer nur 1 Plan-Schritt umsetzen lassen (keine Neben-Refactors).
+7) Nach jedem Schritt: `.\scripts\check.ps1` (rot → minimal fixen, keine Extras).
+8) Wenn grün: kleiner Commit (logisch geschnitten).
+9) Wenn Kontext/Scope driftet: Plan Mode, Plan nachschärfen oder neuer Task + Status in memory-bank.
+10) PR: Cline schreibt PR-Text, du machst Review + finaler `.\scripts\check.ps1`.
+
 ## Definition of Done (DoD)
 
 Eine Aufgabe ist "fertig", wenn:

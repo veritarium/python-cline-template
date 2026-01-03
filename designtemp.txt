@@ -1,0 +1,1919 @@
+Punkt 1: Zielbild und Spielregeln festlegen
+Ziel dieses Punkts: Du definierst ein kleines „Arbeitsabkommen“ (Project Contract), das für dich und Cline gilt. Damit werden Aufgaben klarer, Ergebnisse stabiler, und du verhinderst typische Agent‑Fehler (Neben‑Refactors, ungetestete Änderungen, neue Dependencies ohne Absprache, falsche venv).
+
+Du kannst das in 10–20 Zeilen in dein Repo schreiben (z. B. in DEVELOPMENT.md) und später zusätzlich als .clinerules “hart” machen.
+
+1.1 Definition of Done (DoD) festlegen
+Schreibe in DEVELOPMENT.md (oder ganz oben in deiner Taskbeschreibung) eine DoD, die immer gilt.
+
+Copy/Paste‑Block (DoD):
+
+## Definition of Done (DoD)
+
+Eine Aufgabe ist "fertig", wenn:
+
+- Das definierte Verhalten ist implementiert (Akzeptanzkriterien erfüllt).
+- Das Quality Gate ist grün:
+  - .\scripts\check.ps1
+- Neue/ändernde Logik hat Tests:
+  - Feature: mind. 1 Test pro neuem Verhalten
+  - Bugfix: Regression-Test, der vorher fehlschlägt
+- Keine Neben-Refactors (nur Änderungen, die zur Aufgabe gehören).
+- Keine neuen Dependencies ohne explizite Freigabe.
+- Änderungen sind in kleinen, nachvollziehbaren Commits geschnitten.
+Wenn du (noch) kein scripts/check.ps1 hast, ersetze die Zeile durch deine direkten Commands (ruff/pytest). Das Skript kommt in Punkt 7.
+
+1.2 Quality Gate definieren (die 2–4 Checks, die immer gelten)
+Wähle bewusst: Minimal oder Pro. Hauptsache: konsistent.
+
+Minimal (sehr gut für die meisten Projekte):
+
+Ruff Lint
+
+Ruff Format Check (oder Formatter deiner Wahl)
+
+pytest
+
+Pro (wenn Typen wichtig sind):
+
+mypy oder pyright
+
+Copy/Paste‑Block (Quality Gate):
+
+## Quality Gate (immer ausführen)
+
+- Lint:
+  - ruff check .
+- Format:
+  - ruff format --check .
+- Tests:
+  - python -m pytest
+
+Optional (wenn aktiviert):
+- Types:
+  - python -m mypy .
+  - oder: pyright
+Warum python -m pytest: Damit ist klar, dass pytest in der aktiven Python‑Umgebung läuft.
+
+1.3 Sicherheits- und Scope‑Regeln für Cline (was darf Cline, was nicht)
+Das ist der Teil, der dir später massiv Ärger spart.
+
+Copy/Paste‑Block (Cline Scope):
+
+## Cline Scope & Safety
+
+- Standard: Plan Mode zuerst. Act Mode erst nach Plan-Freigabe.
+- Cline darf nur im Workspace arbeiten (keine Dateien außerhalb).
+- Keine neuen Dependencies ohne explizites OK von mir.
+- Keine Änderungen an Projekt-/Tooling-Konfig (pyproject.toml, CI, pre-commit, etc.) ohne Nachfrage.
+- Keine Neben-Refactors. Nur Änderungen, die zur Aufgabe gehören.
+- Terminal: Kommandos nur ausführen, wenn ich sie freigebe.
+- Vor jedem Tool-Run: sicherstellen, dass die .venv genutzt wird (sys.executable check, falls unklar).
+1.4 Arbeitsweise festnageln: „One‑Step‑Rule“ + Plan/Act‑Ritual
+Damit Cline nicht zu viel auf einmal macht.
+
+Copy/Paste‑Block (Session‑Protokoll):
+
+## Arbeitsweise (Plan/Act)
+
+Plan Mode:
+- Erstelle einen nummerierten Plan (max 10 Schritte).
+- Jeder Schritt nennt: betroffene Dateien + Test/Check danach.
+
+Act Mode:
+- Implementiere immer nur 1 Plan-Schritt pro Durchlauf (max 2, wenn ich es ausdrücklich sage).
+- Nach jedem Schritt: kurz "Was wurde geändert?" + genau 1 Kommando fürs Quality Gate.
+- Wenn Scope wächst: zurück in Plan Mode und Plan aktualisieren.
+1.5 „Nicht‑Ziele“ als Standard (damit Cline nicht kreativ wird)
+Viele Fehler passieren, weil KI „optimiert“, obwohl du nur einen Fix wolltest.
+
+Copy/Paste‑Block (Nicht‑Ziele):
+
+## Standard Nicht-Ziele (sofern nicht ausdrücklich verlangt)
+
+- Keine Umbenennungen über das Feature hinaus
+- Kein Formatieren/Lint-Fixing in unbeteiligten Dateien
+- Keine Architektur-Umbauten "nebenbei"
+- Keine neuen Libraries
+- Keine Änderung von Public APIs ohne Rücksprache
+1.6 Prompt‑Templates (damit du jedes Issue gleich startest)
+Diese drei reichen für 80 % der Arbeit.
+
+Plan Kickoff (Plan Mode):
+
+Plan Mode.
+Ziel: …
+Akzeptanzkriterien: …
+Nicht-Ziele: …
+Bitte lies die relevanten Dateien und erstelle einen nummerierten Plan (max 10 Schritte).
+Jeder Schritt: betroffene Dateien + Test/Check danach.
+
+Implementiere Schritt 1 (Act Mode):
+
+Act Mode. Implementiere ausschließlich Schritt 1 aus dem Plan.
+Keine Neben-Refactors, keine neuen Dependencies.
+Danach: sag kurz, was geändert wurde, und nenne genau 1 Kommando für das Quality Gate.
+
+Debug Minimal (Act Mode):
+
+Act Mode. Analysiere nur den Fehleroutput.
+Schlage die kleinste Änderung vor, die den Fehler behebt.
+Danach erneut Quality Gate (erst nach meiner Freigabe).
+
+Ergebnis von Punkt 1
+Wenn du Punkt 1 umgesetzt hast, hast du:
+
+eine klare DoD
+
+ein festes Quality Gate
+
+klare Sicherheits- und Scope‑Grenzen für Cline
+
+eine Arbeitsweise, die Plan/Act wirklich nutzbar macht
+
+Prompt‑Templates, die du jedes Mal wiederverwenden kannst
+
+Wenn du „Weiter“ schreibst, mache ich mit Punkt 2: Windows‑Basis vorbereiten weiter (Ordnerstruktur, Git‑Konfig, Terminal‑Standard, typische Windows‑Fallstricke).
+
+Du:
+Weiter 
+ChatGPT:
+Reasoned for 4m 27s
+Punkt 2: Windows‑Basis für Development vorbereiten
+Ziel dieses Punkts: Dein Windows‑Setup ist so „ruhig“ und konsistent, dass VS Code + Git + Terminal später zuverlässig funktionieren (ohne OneDrive‑Ärger, Pfadprobleme, Terminal‑Chaos).
+
+2.1 Saubere Projektpfade anlegen (wichtigster Windows‑Hack)
+Lege einen festen Dev‑Root an (kurz, lokal, ohne Sync), z. B.:
+
+C:\dev\projects\
+
+Nutze pro Repo einen Ordner darunter, z. B.:
+
+C:\dev\projects\mein-repo\
+
+Warum:
+
+Kürzere Pfade reduzieren Probleme mit venvs, Tooling, Node‑Dependencies usw.
+
+OneDrive/Dropbox kann File‑Watcher, Locks und Performance stören.
+
+2.2 Terminal-Standard festlegen (damit Commands reproduzierbar sind)
+Empfehlung: PowerShell als Standard (für Windows‑Kommandos, Skripte wie check.ps1 usw.).
+
+Optional (sehr sinnvoll): PowerShell 7 installieren
+
+PowerShell 7 (pwsh) ist oft stabiler/moderner als Windows PowerShell 5.1.
+
+Du kannst später in VS Code als Default Profile pwsh wählen.
+
+VS Code Einstellung:
+
+VS Code → Terminal → Select Default Profile
+
+Wähle PowerShell oder PowerShell 7 (pwsh)
+
+Ziel: Du nutzt in allen Anleitungen später dieselbe Shell.
+
+2.3 Git installieren und einmal sauber konfigurieren
+Installiere Git for Windows.
+
+Öffne PowerShell und prüfe:
+
+git --version
+where git
+Setze globale Git‑Basics:
+
+git config --global user.name "Dein Name"
+git config --global user.email "du@beispiel.de"
+git config --global init.defaultBranch main
+Lange Pfade (wichtig bei Windows):
+
+git config --global core.longpaths true
+Line Endings (solider Windows‑Default):
+
+git config --global core.autocrlf true
+git config --global core.safecrlf warn
+Hinweis: In Teams kann das per .gitattributes project‑weit geregelt werden. Wenn ein Projekt das bereits hat, gilt die Repo‑Regel.
+
+2.4 Optional, aber „pro“: Windows Long Paths systemweit aktivieren
+Git kann lange Pfade nutzen, aber Windows selbst kann (je nach Konfiguration) trotzdem limitieren.
+
+Option A (Pro/Enterprise, wenn Gruppenrichtlinien verfügbar):
+
+Gruppenrichtlinieneditor →
+Computer Configuration → Administrative Templates → System → Filesystem → Enable Win32 long paths → Enabled
+
+Option B (Registry, wenn du weißt was du tust):
+
+Schlüssel:
+HKLM\SYSTEM\CurrentControlSet\Control\FileSystem
+
+DWORD: LongPathsEnabled = 1
+
+Wenn du das nicht anfassen willst: Mit kurzen Pfaden (C:\dev\...) kommst du sehr weit.
+
+2.5 Authentifizierung: HTTPS oder SSH (wähle eins)
+Variante 1: HTTPS (einfach, gut genug)
+
+Git for Windows bringt üblicherweise den Credential Manager mit.
+
+Beim ersten git pull/push wirst du dich anmelden (Token/Browser‑Flow je nach Plattform).
+
+Variante 2: SSH (pro, weniger Re‑Auth)
+
+Prüfe, ob OpenSSH vorhanden ist:
+
+ssh -V
+Key erzeugen (Beispiel):
+
+ssh-keygen -t ed25519 -C "du@beispiel.de"
+Public Key anzeigen:
+
+type $env:USERPROFILE\.ssh\id_ed25519.pub
+Den Public Key bei GitHub/GitLab/Bitbucket hinterlegen.
+
+2.6 VS Code + Git: einmal „sauber“ verproben
+Lege ein Test‑Repo an:
+
+mkdir C:\dev\projects\git-smoke
+cd C:\dev\projects\git-smoke
+git init
+echo "# git-smoke" > README.md
+git add README.md
+git commit -m "init"
+Öffne den Ordner in VS Code und prüfe:
+
+Source Control Panel zeigt den Commit
+
+Terminal läuft im richtigen Profil (PowerShell/pwsh)
+
+2.7 Mini‑Checkliste: Punkt 2 ist „fertig“, wenn …
+Du arbeitest in C:\dev\projects\... (nicht OneDrive)
+
+git --version funktioniert
+
+git config --global core.longpaths true ist gesetzt
+
+VS Code nutzt ein bestätigtes Default‑Terminalprofil
+
+Ein Test‑Commit ging durch
+
+Wenn du „Weiter“ schreibst, mache ich mit Punkt 3: Python sauber installieren und Versionen kontrollieren weiter (inkl. typischer Windows‑Aliase/Store‑Fallen, py Launcher, und venv‑Standard).
+
+Du:
+Weiter 
+ChatGPT:
+Reasoned for 4m 53s
+Punkt 3: Python sauber installieren und Versionen kontrollieren (Windows)
+Ziel dieses Punkts: Du hast eine eindeutige, stabile Python‑Installation auf dem Rechner, du weißt jederzeit „welches Python“ du nutzt, und du vermeidest die typischen Windows‑Fallen (Store‑Aliase, falscher PATH, mehrere Installationen).
+
+3.1 Entscheide dich für eine Python‑Quelle
+Für ein normales Python‑Dev‑Setup (Apps, Tools, Skripte) ist am zuverlässigsten:
+
+python.org (Empfehlung)
+Gut kompatibel mit VS Code, venv, pip, CI.
+
+Alternative nur bei Bedarf:
+
+Conda/Miniconda: wenn du bewusst ein Data‑Science‑Ökosystem brauchst (NumPy/BLAS, komplexe native Pakete), sonst zusätzlicher Overhead.
+
+Microsoft Store Python: eher vermeiden, weil Windows‑Aliase und Pfadlogik öfter verwirren.
+
+3.2 Installation von python.org richtig machen
+Installer starten (64‑bit).
+
+Wichtig im Installer:
+
+“Add Python to PATH” aktivieren
+
+“Install launcher for all users (recommended)” aktivieren (der py‑Launcher ist Gold wert)
+
+Installieren.
+
+Warum der py‑Launcher so wichtig ist:
+
+Er hilft dir, mehrere Python‑Versionen sauber zu verwalten und gezielt zu starten (z. B. py -3.12).
+
+3.3 Windows‑Falle: App Execution Aliases (python öffnet den Store)
+Wenn python oder python3 den Microsoft Store öffnet oder „Python wurde nicht gefunden“ kommt:
+
+Windows Einstellungen → Apps → App‑Ausführungsaliase
+
+Deaktiviere:
+
+python.exe
+
+python3.exe
+
+Danach: Terminal schließen und neu öffnen.
+
+3.4 Health Check: Welche Python‑Version(en) sind installiert?
+Öffne PowerShell (oder dein Standard‑Terminal) und führe aus:
+
+py --version
+py -0p
+py -0p listet alle erkannten Python‑Installationen inklusive Pfad.
+Das ist dein „Single Source of Truth“.
+
+Zusätzlich:
+
+python --version
+where python
+where py
+Wenn where python mehrere Treffer zeigt, ist das nicht automatisch falsch – aber du solltest wissen, welches du tatsächlich nutzt. Für reproduzierbares Arbeiten empfehle ich, dich in Scripts/Docs primär auf py zu stützen.
+
+3.5 pip „gesund“ machen
+py -m pip install --upgrade pip setuptools wheel
+Damit vermeidest du viele Installationsprobleme (alte Build‑Tools, alte Wheel‑Logik).
+
+3.6 (Optional, aber sehr hilfreich) Wenn pip native Builds verlangt
+Wenn du Pakete installierst und Fehler wie „Microsoft Visual C++ Build Tools required“ bekommst:
+
+Installiere die Microsoft C++ Build Tools (Visual Studio Build Tools) inkl. „Desktop development with C++“.
+
+In vielen Projekten brauchst du das nicht, weil Wheels verfügbar sind, aber wenn es knallt, ist das der typische Fix.
+
+3.7 Standard: pro Projekt eine venv, nicht global installieren
+Noch kein .venv anlegen – das kommt als Prozessschritt in Punkt 5 –, aber du solltest dir jetzt schon merken:
+
+Global installierte Pakete sind unter Windows oft eine Fehlerquelle (Versionsmix).
+
+Der Pro‑Standard ist: pro Repo .venv/ und Tools darüber.
+
+3.8 Minimaler Diagnose‑Block (immer nutzen, wenn etwas komisch wirkt)
+Diese drei Zeilen klären 90 % der „falsches Python“‑Probleme:
+
+py -0p
+python --version
+python -c "import sys; print(sys.executable)"
+Später, wenn .venv aktiv ist, muss sys.executable auf ...\<repo>\.venv\Scripts\python.exe zeigen.
+
+3.9 Punkt‑3‑Checkliste: fertig, wenn …
+py --version funktioniert
+
+py -0p zeigt dir die Installation(en) + Pfade
+
+python öffnet nicht den Store (Aliase sind aus, falls nötig)
+
+pip ist aktualisiert (pip/setuptools/wheel)
+
+du weißt: für Projekte nutzt du später .venv statt global
+
+Wenn du „Weiter“ schreibst, mache ich mit Punkt 4: Projekt‑Grundlage anlegen weiter (Repo‑Layout, .gitignore, minimaler Python‑Projektaufbau, damit VS Code + Cline später ideal arbeiten).
+
+Du:
+Weiter 
+ChatGPT:
+Reasoned for 11m 13s
+Punkt 4: Projekt‑Grundlage anlegen (Repo‑Layout, .gitignore, pyproject.toml, Tests)
+Ziel dieses Punkts: Du hast ein Repo, das „sofort sinnvoll“ ist: klare Struktur, saubere Ignore‑Regeln, Tool‑Konfiguration an einem Ort (pyproject.toml) und ein Test‑Gerüst. Damit laufen VS Code, spätere Toolchain (Ruff/pytest) und Cline deutlich stabiler.
+
+4.1 Projektordner anlegen und Repo initialisieren
+In PowerShell:
+
+cd C:\dev\projects
+mkdir <projektname>
+cd <projektname>
+git init
+In VS Code: File → Open Folder… → C:\dev\projects\<projektname>
+
+4.2 Layout wählen: „App/Tool“ oder „Library“ (empfohlene Default‑Struktur)
+Ich gebe dir zwei verbreitete Varianten. Wenn du nicht sicher bist: nimm Variante A (einfach, für Apps/Tools optimal). Du kannst später immer noch auf „src layout“ wechseln.
+
+Variante A (empfohlen als Standard für Apps/Tools)
+<projektname>/
+  <paketname>/
+    __init__.py
+    main.py
+  tests/
+    test_smoke.py
+  pyproject.toml
+  README.md
+  .gitignore
+Vorteil: schnell, wenig Konfig.
+
+Ideal für CLI‑Tools, Skript‑Sammlungen, Services.
+
+Variante B („src layout“, oft für Libraries)
+<projektname>/
+  src/
+    <paketname>/
+      __init__.py
+      main.py
+  tests/
+    test_smoke.py
+  pyproject.toml
+  README.md
+  .gitignore
+Vorteil: verhindert viele Import‑Fehler (Tests importieren nicht „aus Versehen“ aus dem Projektroot).
+
+Gut, wenn du das als Paket/Library veröffentlichen willst.
+
+Für den Lern‑ und Cline‑Workflow reicht Variante A völlig.
+
+4.3 Dateien/Ordner erstellen (Variante A)
+Passe <paketname> an (z. B. my_app, nur klein + underscore).
+
+mkdir <paketname>
+mkdir tests
+New-Item -ItemType File -Force README.md, pyproject.toml, .gitignore
+New-Item -ItemType File -Force <paketname>\__init__.py, <paketname>\main.py, tests\test_smoke.py
+4.4 Minimaler Code‑Stub (damit sofort etwas testbar ist)
+<paketname>/main.py
+
+def add(a: int, b: int) -> int:
+    return a + b
+tests/test_smoke.py
+
+from <paketname>.main import add
+
+
+def test_add_smoke() -> None:
+    assert add(1, 2) == 3
+Das ist bewusst simpel: Ziel ist, dass du später mit Ruff/pytest sofort einen grünen Baseline‑Lauf bekommst.
+
+4.5 pyproject.toml als zentrale Tool‑Konfiguration
+Du kannst pyproject.toml auch ohne Packaging‑Metadaten nutzen (nur für Tools). Das ist für den Start am unkompliziertesten.
+
+pyproject.toml (Tool‑Config‑Minimum):
+
+[tool.ruff]
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+Optional (später, wenn du „Pro“ aufdrehen willst):
+
+strictere Regeln (z. B. select erweitern)
+
+mypy/pyright Config ergänzen
+
+Packaging‑Block [project] hinzufügen (wenn du editable installs/Distribution willst)
+
+4.6 .gitignore (solider Start für Python unter Windows)
+.gitignore
+
+# Python virtual environments
+.venv/
+
+# Python caches
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+
+# Build artifacts
+build/
+dist/
+*.egg-info/
+
+# Coverage / reports
+.coverage
+htmlcov/
+
+# OS / editor noise
+Thumbs.db
+
+# Secrets / env (wenn du sie nutzt)
+.env
+.env.*
+Wichtig: .venv/ gehört praktisch immer in .gitignore.
+
+4.7 Baseline‑Commit (sehr empfehlenswert)
+Bevor du Tooling installierst/änderst, committe einmal den „Projekt‑Sockel“. Das macht spätere Diffs und Cline‑Änderungen viel übersichtlicher.
+
+git add -A
+git commit -m "chore: scaffold project structure"
+4.8 Ergebnis von Punkt 4
+Du hast jetzt:
+
+ein sauberes Repo‑Layout
+
+pyproject.toml als zentrale Stelle für Ruff/pytest‑Konfiguration
+
+ein minimal testbares Stück Code
+
+.gitignore, sodass venv/caches nicht im Repo landen
+
+einen Baseline‑Commit
+
+Wenn du „Weiter“ schreibst, mache ich mit Punkt 5: Virtuelle Umgebung + Toolchain bootstrappen weiter (.venv, pip, ruff, pytest, optional pre-commit, optional mypy/pyright) – so, dass es auf Windows wirklich stabil läuft.
+
+Du:
+Weiter 
+ChatGPT:
+Reasoned for 5m 38s
+Punkt 5: Virtuelle Umgebung und Toolchain bootstrappen
+Ziel dieses Punkts: Du hast pro Projekt eine isolierte Python‑Umgebung (.venv) und die wichtigsten Dev‑Tools installiert, sodass du ab jetzt jederzeit reproduzierbar linten und testen kannst.
+
+5.1 .venv erstellen (im Repo‑Root)
+Im VS‑Code‑Terminal (PowerShell), im Projektordner:
+
+cd C:\dev\projects\<projektname>
+py -m venv .venv
+Wenn du mehrere Python‑Versionen installiert hast und eine bestimmte willst:
+
+py -3.12 -m venv .venv
+5.2 .venv aktivieren (oder bewusst ohne Aktivierung arbeiten)
+Normalfall (mit Aktivierung):
+
+.\.venv\Scripts\Activate.ps1
+Wenn PowerShell blockiert (Execution Policy), dann einmalig für deinen User:
+
+Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+Pro‑Alternative (ohne Aktivierung, extrem robust):
+Wenn du Aktivierung vermeiden willst (oder Cline später mal in Terminal‑Modi zickt), nutze immer den venv‑Python direkt:
+
+.\.venv\Scripts\python.exe -m pip --version
+Das ist auf Windows oft die stabilste Variante, weil du nie „aus Versehen“ im globalen Python landest.
+
+5.3 Baseline‑Checks: Bin ich wirklich in der .venv?
+Wenn aktiviert, prüfe:
+
+python -c "import sys; print(sys.executable)"
+python -m pip --version
+Erwartung: sys.executable zeigt auf ...\<repo>\.venv\Scripts\python.exe.
+
+Wenn du nicht aktiviert hast, dann entsprechend:
+
+.\.venv\Scripts\python.exe -c "import sys; print(sys.executable)"
+.\.venv\Scripts\python.exe -m pip --version
+5.4 pip (und Build‑Tools) aktualisieren
+In der .venv:
+
+python -m pip install -U pip setuptools wheel
+(oder ohne Aktivierung)
+
+.\.venv\Scripts\python.exe -m pip install -U pip setuptools wheel
+5.5 Dev‑Tools installieren: Ruff + pytest (Minimum)
+python -m pip install -U ruff pytest
+Kurz prüfen:
+
+python -m ruff --version
+python -m pytest --version
+5.6 Baseline‑Lauf: Lint + Tests müssen grün sein
+Mit dem Mini‑Test aus Punkt 4:
+
+python -m ruff check .
+python -m pytest
+Wenn das grün ist, weißt du: Python‑Pfad, Imports, Test‑Discovery und Basis‑Tooling stimmen.
+
+5.7 Optional: Dev‑Dependencies dokumentieren (sehr empfehlenswert)
+Wenn du pip nutzt und es simpel halten willst, lege eine requirements-dev.txt an:
+
+requirements-dev.txt
+
+ruff
+pytest
+Dann können andere (oder du später) mit einem Befehl bootstrappen:
+
+python -m pip install -r requirements-dev.txt
+Pro‑Hinweis: Versions‑Pinning (genau definierte Versionen) ist ein eigener Schritt. Für den Anfang reicht „unpinned“, solange du ein Quality Gate hast. Wenn du später absolute Reproduzierbarkeit willst, machen wir das mit pip-tools oder uv (kann man sauber in den Prozess einbauen).
+
+5.8 Ergebnis von Punkt 5
+Du hast jetzt:
+
+eine funktionierende .venv im Repo
+
+aktuelles pip/setuptools/wheel
+
+ruff + pytest installiert
+
+Baseline‑Lint und Baseline‑Tests laufen grün
+
+Wenn du „Weiter“ schreibst, mache ich mit Punkt 6: VS Code für Python stabil konfigurieren weiter (Interpreter fest auf .venv, Ruff/Format‑Konflikte vermeiden, pytest sauber im Test Explorer).
+
+Du:
+Weiter 
+ChatGPT:
+Reasoned for 5m 33s
+Punkt 6: VS Code für Python stabil konfigurieren
+Ziel dieses Punkts: VS Code nutzt zuverlässig deine .venv, führt pytest sauber aus und hat ein klares Lint/Format‑Setup (ohne Tool‑Konflikte). Danach kannst du Cline später sicher einsetzen, weil Terminal‑Runs und Tests reproduzierbar sind.
+
+6.1 Pflicht-Extensions installieren
+In VS Code: Extensions (Strg + Shift + X)
+
+Installiere mindestens:
+
+Python (Microsoft)
+
+Ruff (Ruff Linter/Formatter)
+
+Optional (nur wenn du es brauchst):
+
+Jupyter (wenn Notebook‑Workflow)
+
+GitLens (wenn du viel Git im Editor machst)
+
+Wichtig: Entscheide dich für Ruff als Formatter oder Black als Formatter. Nicht beides parallel aktiv als Default‑Formatter.
+
+6.2 Workspace-Settings anlegen (Repo‑lokal, reproduzierbar)
+Lege im Repo diese Datei an:
+
+<repo>/.vscode/settings.json
+
+Wenn .vscode/ noch nicht existiert, erstelle den Ordner.
+
+Empfohlener Start‑Inhalt:
+
+{
+  // Terminal: venv automatisch aktivieren (wenn VS Code es kann)
+  "python.terminal.activateEnvironment": true,
+
+  // Python: Tests
+  "python.testing.pytestEnabled": true,
+  "python.testing.unittestEnabled": false,
+  "python.testing.pytestArgs": ["tests"],
+
+  // Editor: Python-Dateien beim Speichern formatieren + Ruff-Fixes
+  "[python]": {
+    "editor.formatOnSave": true,
+    "editor.codeActionsOnSave": {
+      "source.fixAll.ruff": "explicit",
+      "source.organizeImports.ruff": "explicit"
+    }
+  }
+}
+Wenn VS Code/Extensions bei dir source.fixAll.ruff nicht kennen (selten, aber möglich), nimm als Fallback:
+
+"editor.codeActionsOnSave": {
+  "source.fixAll": "explicit",
+  "source.organizeImports": "explicit"
+}
+(und stelle sicher, dass Ruff der aktive Linter/Import‑Organizer ist).
+
+6.3 Interpreter fest auf .venv setzen
+Öffne das Repo in VS Code (Ordner‑Workspace).
+
+Strg + Shift + P → Python: Select Interpreter
+
+Wähle den Interpreter in deinem Projekt:
+
+...\<repo>\.venv\Scripts\python.exe
+
+Wenn .venv nicht angezeigt wird:
+
+Wähle „Enter interpreter path…“ und navigiere manuell zu .venv\Scripts\python.exe.
+
+Sofort-Check im VS Code Terminal:
+
+python -c "import sys; print(sys.executable)"
+Erwartung: Pfad zeigt auf ...\<repo>\.venv\Scripts\python.exe.
+
+6.4 Terminal-Profil vereinheitlichen (damit Commands immer gleich laufen)
+In VS Code:
+
+Terminal → Select Default Profile
+
+Empfehlung: PowerShell oder PowerShell 7 (pwsh)
+
+Danach:
+
+Terminal schließen
+
+Neues Terminal öffnen (damit Aktivierung der venv sauber greift)
+
+6.5 Ruff sauber als Lint + Format nutzen (Konflikte vermeiden)
+A) Ruff als Default-Formatter setzen
+Damit „Format Document“ und „Format on Save“ wirklich Ruff nutzen:
+
+Öffne eine .py Datei
+
+Rechtsklick → Format Document With… → Configure Default Formatter…
+
+Wähle Ruff
+
+Wenn du stattdessen Black nutzen willst:
+
+Dann setze Black als Default Formatter und nutze Ruff nur fürs Linting/Fixes.
+
+Entscheidend ist: nur ein Default Formatter.
+
+B) Sicherstellen, dass Ruff im Projekt installiert ist
+In deiner .venv:
+
+python -m pip install -U ruff
+C) Basis-Config in pyproject.toml (falls noch nicht vorhanden)
+[tool.ruff]
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP"]
+6.6 pytest in VS Code aktivieren (Test Explorer)
+Voraussetzung: pytest ist in .venv installiert:
+
+python -m pip install -U pytest
+Dann in VS Code:
+
+Links das Testing Icon öffnen
+
+„Configure Tests“ auswählen
+
+pytest wählen
+
+Test‑Ordner bestätigen (typisch: tests/)
+
+Wenn Tests nicht auftauchen:
+
+Prüfe, ob du wirklich den .venv Interpreter nutzt (siehe 6.3)
+
+Prüfe, ob es überhaupt tests/test_*.py gibt
+
+Einmal VS Code neu starten
+
+6.7 Smoke Test (2 Minuten) – danach ist Punkt 6 erledigt
+Im VS Code Terminal:
+
+Interpreter check:
+
+python -c "import sys; print(sys.executable)"
+Ruff:
+
+python -m ruff check .
+pytest:
+
+python -m pytest
+Wenn das alles sauber läuft, ist VS Code „Python‑ready“ und du hast eine stabile Basis für Cline.
+
+Wenn du „Weiter“ schreibst, mache ich mit Punkt 7: Quality‑Gate automatisieren (scripts/check.ps1 + scripts/fix.ps1) weiter, sodass du für „grün/rot“ nur noch einen einzigen Befehl brauchst.
+
+Du:
+Weiter 
+ChatGPT:
+Reasoned for 3m 59s
+Punkt 7: Quality‑Gate automatisieren (ein Befehl für „grün/rot“)
+Ziel dieses Punkts: Du hast in jedem Repo genau einen Standardbefehl, der zuverlässig unter Windows läuft – auch wenn die venv im Terminal gerade nicht aktiviert ist. Das macht VS Code, Cline und deinen gesamten Workflow stabiler.
+
+Wir erstellen dafür zwei PowerShell‑Skripte:
+
+.\scripts\check.ps1 → Lint + Format‑Check + Tests (scheitert mit Exit‑Code, wenn etwas rot ist)
+
+.\scripts\fix.ps1 → Ruff‑Fixes + Format + danach optional Tests
+
+7.1 scripts/ Ordner anlegen
+Im Repo‑Root:
+
+mkdir scripts
+7.2 scripts/check.ps1 erstellen
+Lege scripts/check.ps1 an und füge diesen Inhalt ein:
+
+# scripts/check.ps1
+# Quality Gate: Ruff lint + Ruff format check + pytest
+# Läuft robust, auch wenn keine venv aktiviert ist.
+
+$ErrorActionPreference = "Stop"
+
+$RepoRoot = Split-Path -Parent $PSScriptRoot
+$VenvPython = Join-Path $RepoRoot ".venv\Scripts\python.exe"
+$VenvRuff   = Join-Path $RepoRoot ".venv\Scripts\ruff.exe"
+
+function Assert-FileExists([string]$Path, [string]$Hint) {
+    if (-not (Test-Path $Path)) {
+        Write-Host "Fehlt: $Path"
+        Write-Host $Hint
+        exit 1
+    }
+}
+
+function Run-Step([string]$Title, [string]$Exe, [string[]]$Args) {
+    Write-Host ""
+    Write-Host "== $Title =="
+    & $Exe @Args
+    $code = $LASTEXITCODE
+    if ($code -ne 0) {
+        Write-Host ""
+        Write-Host "FEHLER in Schritt: $Title (Exit Code $code)"
+        exit $code
+    }
+}
+
+Assert-FileExists $VenvPython "Erstelle die venv im Repo-Root:  py -m venv .venv"
+Assert-FileExists $VenvRuff   "Installiere ruff in der venv:      .\.venv\Scripts\python.exe -m pip install -U ruff"
+# pytest wird über python -m pytest gestartet, daher kein eigener exe-check nötig.
+
+# 0) Interpreter-Check (hilft enorm bei Debugging)
+Run-Step "Python Interpreter" $VenvPython @("-c", "import sys; print(sys.executable)")
+
+# 1) Lint
+Run-Step "Ruff (lint)" $VenvRuff @("check", ".")
+
+# 2) Format-Check (bricht ab, wenn Formatierung nicht passt)
+Run-Step "Ruff (format check)" $VenvRuff @("format", "--check", ".")
+
+# 3) Tests
+Run-Step "Pytest" $VenvPython @("-m", "pytest")
+Was dieses Skript „pro“ macht:
+
+Es nutzt explizit .venv\Scripts\python.exe und .venv\Scripts\ruff.exe → kein PATH‑Chaos, keine „falsche Python“-Fälle.
+
+Es beendet sich bei Fehlern mit einem Exit‑Code → ideal für CI, VS Code Tasks und Cline.
+
+7.3 scripts/fix.ps1 erstellen (Ruff Fixes + Format)
+Lege scripts/fix.ps1 an:
+
+# scripts/fix.ps1
+# Wendet Ruff-Fixes an und formatiert den Code.
+# Empfehlung: vorher git status clean oder einen Commit/Checkpoint haben.
+
+$ErrorActionPreference = "Stop"
+
+$RepoRoot = Split-Path -Parent $PSScriptRoot
+$VenvPython = Join-Path $RepoRoot ".venv\Scripts\python.exe"
+$VenvRuff   = Join-Path $RepoRoot ".venv\Scripts\ruff.exe"
+
+function Assert-FileExists([string]$Path, [string]$Hint) {
+    if (-not (Test-Path $Path)) {
+        Write-Host "Fehlt: $Path"
+        Write-Host $Hint
+        exit 1
+    }
+}
+
+function Run-Step([string]$Title, [string]$Exe, [string[]]$Args) {
+    Write-Host ""
+    Write-Host "== $Title =="
+    & $Exe @Args
+    $code = $LASTEXITCODE
+    if ($code -ne 0) {
+        Write-Host ""
+        Write-Host "FEHLER in Schritt: $Title (Exit Code $code)"
+        exit $code
+    }
+}
+
+Assert-FileExists $VenvPython "Erstelle die venv im Repo-Root:  py -m venv .venv"
+Assert-FileExists $VenvRuff   "Installiere ruff in der venv:      .\.venv\Scripts\python.exe -m pip install -U ruff"
+
+Run-Step "Ruff (lint + fix)" $VenvRuff @("check", ".", "--fix")
+Run-Step "Ruff (format)"     $VenvRuff @("format", ".")
+
+# Optional: danach direkt testen (empfohlen)
+Run-Step "Pytest" $VenvPython @("-m", "pytest")
+Empfehlung für den Alltag:
+
+fix.ps1 nur dann nutzen, wenn du auch wirklich bereit bist, Code zu verändern (und du danach reviewst).
+
+7.4 Kurztest: Skripte laufen lassen
+Im Repo‑Root:
+
+.\scripts\check.ps1
+Wenn du absichtlich einen Formatfehler provozierst (z. B. Leerzeilen), sollte check.ps1 sauber rot werden.
+
+Dann:
+
+.\scripts\fix.ps1
+.\scripts\check.ps1
+7.5 Ein Satz, der dir später mit Cline extrem hilft
+Ab jetzt ist dein Standard nach jedem Cline‑Schritt:
+
+„Führe .\scripts\check.ps1 aus und behebe nur das, was rot ist.“
+
+Damit muss Cline nicht mehr raten, welche Kommandos es laufen lassen soll, und du bekommst reproduzierbares Verhalten.
+
+Wenn du „Weiter“ schreibst, mache ich mit Punkt 8: Cline installieren und mit sicherem Startprofil betreiben weiter (Approvals, Terminal‑Modus, erstes „Plan‑only“ Onboarding im Repo).
+
+Du:
+Weiter 
+ChatGPT:
+Reasoned for 7m 29s
+Punkt 8: Cline installieren und mit sicherem Startprofil betreiben
+Ziel dieses Punkts: Cline ist in VS Code installiert, du findest die wichtigen Menüs (Plan/Act, Settings), und du startest mit einem Sicherheitsprofil, das produktiv ist, aber Risiken minimiert (keine ungewollten Edits/Commands).
+
+8.1 Installation in VS Code und Öffnen
+Extensions öffnen
+
+Strg + Shift + X → im Marketplace nach “Cline” suchen → Install. 
+Cline
++1
+
+Cline öffnen
+
+Cline‑Icon in der Activity Bar anklicken, oder
+
+Strg + Shift + P → “Cline: Open In New Tab”. 
+Cline
+
+Wenn VS Code nach einer Berechtigung fragt („Running extensions might…“), Allow klicken; falls das Icon nicht erscheint: VS Code komplett neu starten. 
+Cline
+
+8.2 Sign‑in (falls du den Cline‑Provider nutzt)
+Wenn du den Cline‑Provider (Account‑Login) nutzen willst:
+
+Im Cline‑Panel auf Sign Up / Sign In klicken → du wirst zu app.cline.bot weitergeleitet und danach zurück in den Editor. 
+Cline
+
+(Provider/Model‑Feintuning machen wir in Punkt 9; hier geht’s erstmal um „läuft sicher“.)
+
+8.3 Auto Approve: sichere Standard‑Konfiguration (empfohlen)
+Cline hat Auto Approve, damit du nicht ständig dieselben harmlosen Bestätigungen klicken musst. Gleichzeitig kannst du riskante Dinge weiterhin manuell freigeben. 
+Cline
+
+Empfohlenes Start‑Profil (genau so, wie Cline es selbst empfiehlt):
+
+An: Read project files
+
+Aus: Edit project files, Execute safe commands, Use the browser, Use MCP servers
+
+Aus: Read all files (außerhalb Workspace)
+
+Aus: Edit all files (außerhalb Workspace) 
+Cline
+
+Wichtiges Detail: Read all files und Edit all files erweitern nur die Basis‑Option (wenn Basis aus ist, tun sie nichts). Und bei Commands ist „safe vs approval required“ nicht starr, sondern wird pro Kommando bewertet – deshalb ist „Command Auto‑Approve“ am Anfang meistens besser aus. 
+Cline
+
+8.4 YOLO Mode: aus lassen (und warum)
+YOLO Mode umgeht die granularen Freigaben und auto‑approved sehr weitreichend (Dateien überall am System, Terminal‑Commands inkl. potenziell destruktiver Aktionen, Browser‑Aktionen, MCP‑Tools, sogar Mode‑Transitions Plan→Act). Für Lernen und produktive Repos: normalerweise nein. 
+Cline
++1
+
+8.5 Checkpoints: aktiv lassen (Sicherheitsnetz für KI‑Änderungen)
+Checkpoints sind standardmäßig aktiv und speichern nach jedem Tool‑Schritt einen Snapshot deines Workspace (Edits, Commands etc.). Du kannst dadurch Änderungen schrittweise prüfen und bei Bedarf zurückrollen, ohne deinen normalen Git‑Workflow zu zerstören. 
+Cline
+
+Wo du es findest: Cline Settings → Feature Settings → Enable Checkpoints (an/aus). 
+Cline
+
+8.6 Explain Changes für Review nutzen (sehr hilfreich)
+Wenn Cline Code geändert hat, kannst du im Abschluss‑Bereich neben „View Changes“ eine Funktion Explain Changes nutzen, die dir inline im Diff erklärt, was warum geändert wurde. Das ist ideal für Review und Knowledge Transfer. Diese Funktion braucht aktivierte Checkpoints. 
+Cline
++1
+
+8.7 Terminal‑Modus: erst normal, bei Problemen „Background Exec“
+Wenn Cline bei Terminal‑Ausführung hängt, keinen Output sieht oder „komisch“ reagiert:
+
+Cline Settings → Terminal Settings → Terminal Execution Mode → Background Exec. 
+Cline
++1
+
+Das ist laut Cline‑Troubleshooting der schnellste Fix, weil Commands dann in einem Hintergrundprozess laufen statt im VS‑Code‑Terminal und damit viele Integrationsprobleme umgangen werden. 
+Cline
++1
+
+Pro‑Tipp: Weil wir ab Punkt 7 ein .\scripts\check.ps1 haben, kannst du Cline fast immer nur dieses Script ausführen lassen – das vermeidet Windows‑Quoting‑Edgecases und macht Runs reproduzierbar.
+
+8.8 Erstes „Onboarding“ im Repo: Plan‑only, dann ein kontrollierter Act‑Step
+Cline’s eigener Workflow empfiehlt: signifikante Tasks immer in Plan Mode starten, dann erst in Act Mode umsetzen. 
+Cline
+
+A) Plan Mode – nur Orientierung, keine Änderungen
+Prompt (Copy/Paste):
+
+Plan Mode.
+Lies bitte README.md, pyproject.toml und scripts/check.ps1.
+Erkläre mir in 6–10 Zeilen:
+
+wie ich das Quality Gate ausführe,
+
+welche Dateien du für typische Änderungen anfassen würdest,
+
+welche Risiken du siehst (z. B. venv/Imports).
+Keine Codeänderungen, keine Commands ausführen.
+
+B) Act Mode – nur ein harmloser Kommando‑Check
+Prompt (Copy/Paste):
+
+Act Mode. Führe ausschließlich .\scripts\check.ps1 aus.
+Wenn es fehlschlägt: erkläre nur den Fehler und schlage die kleinste Änderung vor. Keine weiteren Verbesserungen.
+
+Ergebnis von Punkt 8
+Wenn Punkt 8 erledigt ist, gilt:
+
+Cline ist installiert und öffnet sauber in VS Code. 
+Cline
+
+Du startest sicher: Auto Approve nur „Read project files“, alles andere manuell. 
+Cline
+
+YOLO ist aus. 
+Cline
++1
+
+Checkpoints sind an (Rollback‑Sicherheit). 
+Cline
+
+Terminal kann bei Bedarf auf Background Exec umgestellt werden. 
+Cline
++1
+
+Du hast den Plan→Act‑Rhythmus praktisch getestet. 
+Cline
+
+Wenn du „Weiter“ schreibst, machen wir mit Punkt 9: Provider/Modelle wie ein Pro nutzen weiter (Plan/Act getrennte Modelle, Kosten-/Kontextdisziplin, sinnvolle Defaults für Python‑Workflows).
+
+Du:
+Weiter 
+ChatGPT:
+Reasoned for 8m 40s
+Punkt 9: Provider und Modelle wie ein Pro nutzen (Plan/Act getrennt, Kosten und Zuverlässigkeit im Griff)
+Ziel dieses Punkts: Du stellst Cline so ein, dass du schnell, günstig und trotzdem zuverlässig arbeitest – vor allem bei Python‑Workflows mit Tests/Linting. Der Kern ist: Plan Mode = denken, Act Mode = umsetzen + Tools laufen lassen.
+
+9.1 Leitprinzip: Plan und Act bewusst unterschiedlich behandeln
+Cline empfiehlt explizit, separate Modelle für Plan Mode und Act Mode zu konfigurieren: z. B. ein günstigeres Modell fürs Planen und ein stärkeres Modell für die Umsetzung. 
+Cline
+
+Warum das in der Praxis funktioniert:
+
+Plan Mode braucht: gutes Denken, Struktur, Architektur‑Entscheidungen, große Kontextfenster (damit es Code/Struktur versteht).
+
+Act Mode braucht: gute Code‑Qualität, Zuverlässigkeit bei Tool‑Ausgaben (Fehlerlogs richtig interpretieren), saubere minimal‑Fixes.
+
+9.2 Provider‑Wahl: einfache Faustregeln
+Cline selbst beschreibt typische Provider‑Stärken (vereinfacht):
+
+Cline (Account‑Login): am schnellsten startklar, keine eigenen API‑Keys nötig. 
+Cline
+
+OpenRouter: viele Modelle über einen Provider, oft gut fürs Experimentieren/Preis‑Leistung; Cline kann die Modellliste automatisch abrufen. 
+Cline
++1
+
+Direkte Provider (z. B. Anthropic/OpenAI/Gemini): oft stabil und klar, wenn du dich auf eine Modellfamilie festlegen willst. 
+Cline
+
+Lokal (Ollama): Privacy/Offline. 
+Cline
+
+Pro‑Entscheidungshilfe:
+
+Willst du schnell starten und wenig Admin? → Cline Provider
+
+Willst du flexibel Modelle wechseln? → OpenRouter
+
+Willst du maximale “Tool‑Reliability”/Stabilität bei einem Anbieter? → direkter Provider
+
+Willst du offline/privat? → lokal
+
+9.3 So stellst du Provider und Modelle ein (Cline Settings)
+Cline beschreibt dafür einen klaren Ablauf: Settings öffnen → Provider wählen → Key/Sign‑In → Modell wählen. 
+Cline
++1
+
+Settings öffnen
+
+In Cline oben rechts auf das Settings‑Symbol klicken (Zahnrad), oder
+
+Ctrl + Shift + P → „Cline: Open Settings“ 
+Cline
+
+API Provider auswählen
+
+Dropdown „API Provider“ → Provider wählen 
+Cline
++1
+
+Auth
+
+Wenn Provider = Cline: einloggen (kein API‑Key) 
+Cline
+
+Sonst: API‑Key vom Provider holen und in Cline eintragen
+Cline sagt auch: der Key wird im Secrets Storage des Editors gespeichert (nicht im Repo). 
+Cline
+
+Model auswählen
+
+Danach wird das Model‑Dropdown aktiv. 
+Cline
++1
+
+9.4 Plan/Act getrennte Modelle aktivieren (und richtig prüfen)
+In Cline gibt es eine Option, getrennte Modelle für Plan und Act zu nutzen; das wird in der Model‑Selection‑Doku explizit empfohlen. 
+Cline
+
+Pro‑Vorgehen:
+
+Aktiviere „separate models for Plan and Act“ (sinngemäß: „Use different models…“).
+
+Setze Plan‑Modell.
+
+Setze Act‑Modell.
+
+Danach: noch einmal kontrollieren, ob beide Werte wirklich gespeichert sind.
+
+Warum der Kontrollschritt wichtig ist:
+Es gibt bekannte Fälle, in denen beim Wechsel zwischen Plan/Act in bestimmten Konstellationen (z. B. „OpenAI‑compatible provider“) die Konfiguration überschrieben wird. 
+GitHub
+
+Wenn du das Problem bei dir siehst:
+
+Als Workaround (bis es in deiner Version gefixt ist):
+
+entweder vorübergehend dasselbe Modell für Plan und Act nutzen
+
+oder auf einen Provider wechseln, bei dem die getrennte Konfiguration stabil funktioniert
+
+und grundsätzlich nach jeder Änderung kurz gegenprüfen
+
+9.5 Konkrete Modell‑Strategien (für Python‑Workflows)
+Cline gibt selbst eine „Quick Selection“‑Orientierung und empfiehlt je nach Priorität bestimmte Modelle. 
+Cline
+
+Du musst das nicht 1:1 übernehmen, aber es ist ein guter Startpunkt.
+
+Profil 1: „Einfach, stabil“
+
+Plan = Act = ein zuverlässiges Modell
+Vorteil: wenig Konfig‑Reibung, gut fürs Lernen.
+
+Profil 2: „Pro‑Standard: günstig planen, stark umsetzen“ (meine Empfehlung)
+
+Plan: Budget/Value‑Modell
+
+Act: Premium‑Modell für Umsetzung + Fehleranalyse
+Genau dieses Muster empfiehlt Cline als Pro‑Tipp. 
+Cline
+
+Profil 3: „Große Codebase / viel Kontext“
+
+Plan: Modell mit großem Kontextfenster
+
+Act: Modell mit guter Tool‑Zuverlässigkeit (weil Tests/Logs sauber interpretiert werden müssen)
+
+9.6 OpenRouter‑Pro‑Einstellungen (wenn du OpenRouter nutzt)
+In der OpenRouter‑Provider‑Doku stehen drei Dinge, die in der Praxis wirklich wichtig sind: 
+Cline
+
+Model‑Liste
+
+Cline holt die verfügbaren Modelle automatisch von OpenRouter. 
+Cline
+
+Transforms / Prompt‑Kompression („middle‑out“)
+
+OpenRouter bietet eine optionale „middle‑out“ Transform; in Cline aktivierst du sie über „Compress prompts and message chains to the context size“. 
+Cline
++1
+
+Pro‑Einsatz: nur dann aktivieren, wenn du wirklich oft am Kontextlimit bist. Besser ist meistens: Kontext sauber halten (nur relevante Dateien, .clineignore nutzen).
+
+Prompt Caching
+
+Für viele Modelle läuft Caching automatisch, aber: bei Gemini‑Modellen via OpenRouter verlangt Cline aktuell eine manuelle Aktivierung („Enable Prompt Caching“ Checkbox). 
+Cline
+
+9.7 Zuverlässigkeit: Terminal‑Runs und Tests als „Wahrheit“
+Für Pro‑Arbeit gilt: Das Modell darf noch so gut sein – „fertig“ ist es erst, wenn .\scripts\check.ps1 grün ist.
+
+Damit Cline zuverlässig Commands ausführen und Output lesen kann, empfiehlt die offizielle Troubleshooting‑Doku als ersten Fix bei Problemen:
+
+Terminal Execution Mode → Background Exec 
+Cline
+
+Zusatz‑Pro‑Hinweis: Wenn du Background Exec nutzt, halte Terminal‑Commands möglichst „quote‑arm“. Genau dafür haben wir in Punkt 7 check.ps1.
+
+9.8 Mini‑Smoke‑Test nach der Konfiguration (2 Minuten)
+Plan Mode Prompt:
+
+Plan Mode. Lies pyproject.toml und scripts/check.ps1 und erkläre kurz, wie du in diesem Repo Qualität prüfst. Keine Änderungen, keine Commands.
+
+Act Mode Prompt:
+
+Act Mode. Führe ausschließlich .\scripts\check.ps1 aus.
+
+Wenn das klappt, ist Provider/Model/Terminal‑Loop sauber.
+
+Ergebnis von Punkt 9
+Du hast jetzt:
+
+eine klare Provider‑Entscheidung
+
+eine Plan/Act‑Strategie (optimal: getrennte Modelle)
+
+Settings so gesetzt, dass Keys sicher gespeichert werden 
+Cline
+
+OpenRouter‑Optionen verstanden (Transforms/Caching) 
+Cline
++1
+
+einen Test‑Loop, der „Pro‑Qualität“ erzwingt (check.ps1)
+
+Wenn du „Weiter“ schreibst, kommt Punkt 10: Lernen über ein kleines Python‑Übungsprojekt – mit einem sehr konkreten Ablauf (Plan → Act in Mini‑Schritten → check.ps1 → Commit) und Prompt‑Vorlagen, die du danach in echte Repos übernimmst.
+
+Du:
+Weiter 
+ChatGPT:
+Reasoned for 5m 59s
+Punkt 10: Lernen über ein kleines Python‑Übungsprojekt (Plan → Act → Quality Gate → Commit)
+Ziel dieses Punkts: Du trainierst den „Pro‑Loop“ mit Cline an einem kleinen Projekt, das trotzdem realistisch ist (mehrere Dateien, Tests, CLI, kleine Refactors). Du lernst dabei nicht nur „Cline bedienen“, sondern vor allem: wie du Cline führst, damit Ergebnisse stabil sind.
+
+Wir bauen als Übungsprojekt ein kleines CLI‑Tool textstats:
+
+Input: Datei oder STDIN
+
+Output: Zeilen, Wörter, Zeichen
+
+Optional: Top‑N Wörter
+
+Tests + Ruff + scripts/check.ps1 als Quality Gate
+
+Alles in kleinen Schritten
+
+10.1 Übungsrepo anlegen (Quickstart)
+Wenn du üben willst, ohne dein echtes Repo zu riskieren:
+
+cd C:\dev\projects
+mkdir cline-textstats-lab
+cd cline-textstats-lab
+git init
+Empfohlenes Layout (Variante A):
+
+cline-textstats-lab/
+  textstats/
+    __init__.py
+    core.py
+    cli.py
+  tests/
+    test_core.py
+  pyproject.toml
+  .gitignore
+  scripts/
+    check.ps1
+    fix.ps1
+  README.md
+Du kannst das Layout und die Skripte aus den vorherigen Punkten wiederverwenden (Punkt 4–7).
+
+10.2 Lernregel: Jede Übung besteht aus 5 Schritten
+Spec in 5 Zeilen (Ziel, Akzeptanzkriterien, Nicht‑Ziele)
+
+Plan Mode: Cline erstellt Plan (max 10 Schritte)
+
+Act Mode: Cline implementiert genau 1 Schritt
+
+Quality Gate: .\scripts\check.ps1
+
+Commit
+
+Wenn irgendwo etwas rot ist: erst minimal fixen, dann weiter.
+
+Übung 1: Core‑Logik + Tests (ohne CLI)
+Spec (du gibst Cline das als Input)
+Ziel: analyze_text(text) liefert {lines, words, chars}
+
+Akzeptanz:
+
+lines: Anzahl \n‑getrennter Zeilen (leerer Text = 0 oder 1? du entscheidest)
+
+words: einfache Tokenisierung (z. B. split auf whitespace)
+
+chars: len(text)
+
+Nicht‑Ziele: keine CLI, kein Dateizugriff
+
+Plan Mode Prompt (Copy/Paste)
+Plan Mode.
+Wir implementieren nur Core‑Logik in textstats/core.py und Tests in tests/test_core.py.
+Bitte erstelle einen Plan (max 8 Schritte).
+Jeder Schritt: betroffene Dateien + welcher Test/Check danach (immer .\scripts\check.ps1).
+Keine Codeänderungen.
+
+Was du im Plan prüfst:
+
+Sind Edge Cases drin (leer, nur whitespace, mehrere Zeilen)?
+
+Ist die Definition „lines bei leerem Text“ klar? (einmal festlegen, dann testen)
+
+Act Mode Prompt (Copy/Paste)
+Act Mode. Implementiere ausschließlich Schritt 1 aus dem Plan.
+Keine Neben-Refactors, keine neuen Dependencies.
+Danach: führe nur .\scripts\check.ps1 aus (erst nach meiner Freigabe).
+
+Wenn check.ps1 rot ist:
+
+Analysiere nur den Fehleroutput. Schlage die kleinste Änderung vor, die es grün macht. Keine weiteren Verbesserungen.
+
+Dann committen:
+
+git add -A
+git commit -m "feat(core): add basic text stats with tests"
+Übung 2: Tokenisierung verbessern + Top‑N Wörter (kleiner Refactor)
+Spec
+Ziel: analyze_text(text, top_n=10) liefert zusätzlich top_words (Liste von (word, count) oder dict)
+
+Tokenisierung: lowercase, nur alphanumerisch (du kannst regex nutzen, aber ohne neue deps)
+
+Akzeptanz: stabile Sortierung (count absteigend, dann alphabetisch)
+
+Nicht‑Ziele: keine CLI, kein IO
+
+Plan Mode Prompt
+Plan Mode.
+Erweitere Core um top_words.
+Constraints: keine neuen Dependencies, Tests müssen die Sortierung absichern.
+Erstelle einen Plan (max 10 Schritte) und nenne pro Schritt den Check (.\scripts\check.ps1).
+Keine Codeänderungen.
+
+Act Mode Prompt
+Act Mode. Implementiere nur den nächsten Schritt aus dem Plan.
+Danach: .\scripts\check.ps1.
+Wenn rot: minimal fixen, keine Extras.
+
+Commit‑Vorschlag:
+
+git commit -am "feat(core): add top word frequencies"
+(Lieber git add -A statt -am, wenn neue Dateien dabei sind.)
+
+Übung 3: CLI (argparse) + Input Datei oder STDIN
+Spec
+Ziel: python -m textstats.cli --path file.txt funktioniert
+
+Wenn --path fehlt: liest STDIN
+
+Output: klarer Text (oder JSON, nur wenn du willst)
+
+Akzeptanz: Exit Code ≠ 0 bei fehlender Datei, klare Fehlermeldung
+
+Nicht‑Ziele: kein Packaging/Publish
+
+Plan Mode Prompt
+Plan Mode.
+Wir bauen eine CLI in textstats/cli.py.
+Anforderungen: Datei oder STDIN, saubere Fehlermeldungen, Exit Codes.
+Core bleibt getrennt von IO.
+Erstelle Plan (max 10 Schritte) inkl. Tests (wo sinnvoll) und Quality Gate.
+Keine Codeänderungen.
+
+Pro‑Hinweis: CLI‑Tests sind möglich (z. B. über subprocess oder direkte main(argv)), aber du kannst auch minimal starten:
+
+Core bleibt gut getestet
+
+CLI hat wenige, klare Pfade
+
+ggf. 1–2 Tests für parse_args/main(argv) wenn du main(argv) so designst, dass es testbar ist
+
+Act Mode Prompt
+Act Mode. Implementiere nur Schritt 1 aus dem Plan.
+Keine Neben-Refactors.
+Danach: .\scripts\check.ps1.
+
+Commit‑Vorschlag:
+
+git add -A
+git commit -m "feat(cli): add argparse entry for file or stdin"
+Übung 4: Debug‑Drill (bewusst rot machen, dann minimal fixen)
+Ziel: Du trainierst „Cline als Debugger“, ohne dass es dir das Projekt „optimiert“.
+
+Ablauf
+Baue absichtlich einen Fehler ein (z. B. ändere in core.py words falsch)
+
+Lass .\scripts\check.ps1 laufen → rot
+
+Nutze diesen Prompt:
+
+Act Mode. Tests sind rot.
+Analysiere nur den Fehleroutput.
+Schlage die kleinste Änderung vor, die genau diesen Fehler behebt.
+Danach erneut .\scripts\check.ps1 (erst nach meiner Freigabe).
+Keine Refactors, keine Verbesserungen.
+
+Commit‑Vorschlag:
+
+git add -A
+git commit -m "fix(core): correct word counting regression"
+10.3 Wie du dich selbst „bewertest“ (Pro‑Kriterien)
+Du hast Punkt 10 wirklich gelernt, wenn:
+
+du konsequent Plan→Act nutzt (nicht „einfach loscoden“)
+
+du Cline auf 1 Schritt pro Durchlauf begrenzt
+
+du nach jedem Schritt check.ps1 laufen lässt
+
+du Commits klein hältst
+
+du Cline daran hinderst, Neben‑Refactors zu machen
+
+du Fehler nur minimal fixen lässt (nicht „alles neu“)
+
+10.4 Häufige Lernfallen (und Gegenmittel)
+Cline will „gleich alles“ implementieren
+→ Prompt: „nur Schritt 1“, „keine Neben‑Refactors“, „max 1 Schritt“
+
+Cline sagt „sollte funktionieren“, ohne Tests laufen zu lassen
+→ Regel: „check.ps1 ist die Wahrheit“
+
+CLI wird untestbar
+→ main(argv: list[str]) -> int designen, damit Tests möglich sind
+
+Tokenisierung/Edge Cases schwammig
+→ Du definierst exakt die Regeln und schreibst Tests, die die Regeln erzwingen
+
+Wenn du „Weiter“ schreibst, kommt Punkt 11: .clinerules, .clineignore und Memory Bank – also wie du aus dem gelernten Workflow ein dauerhaftes, projektweites System machst (damit Cline in echten Repos konsistent bleibt).
+
+Du:
+Weiter 
+ChatGPT:
+Reasoned for 5m 9s
+Punkt 11: .clinerules, .clineignore und Memory Bank dauerhaft einsetzen
+Ziel dieses Punkts: Aus „Cline kann helfen“ wird ein stabiler, wiederholbarer System‑Workflow. Du sorgst dafür, dass Cline
+
+nicht im falschen Kontext arbeitet (Noise, .venv, Caches),
+
+nicht gegen deine Standards „driftet“,
+
+sich Projektentscheidungen über Sessions hinweg merkt.
+
+Das sind die drei Bausteine:
+
+.clineignore = Was Cline möglichst nie anschauen soll
+
+.clinerules = Wie Cline sich im Projekt verhalten soll
+
+memory-bank/ = Was Cline über das Projekt dauerhaft wissen muss
+
+11.1 .clineignore anlegen (Kontext sauber halten)
+Lege im Repo‑Root eine Datei .clineignore an.
+
+Empfohlener Startinhalt für Python‑Repos:
+
+# Virtual env + caches
+.venv/
+__pycache__/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.pyright/
+
+# Build artifacts
+build/
+dist/
+*.egg-info/
+
+# Coverage / reports
+.coverage
+htmlcov/
+*.log
+
+# Secrets / env
+.env
+.env.*
+Wichtige Hinweise:
+
+.venv/ gehört hier unbedingt rein, sonst “ersäuft” Cline im Kontext.
+
+Ich empfehle nicht, pauschal .vscode/ zu ignorieren, weil dort oft deine reproduzierbaren Workspace‑Settings liegen (Interpreter, Test‑Setup, Format‑Konflikte).
+
+11.2 .clinerules als Projektvertrag (damit du dich nicht wiederholen musst)
+Du hast zwei Optionen:
+
+Einzeldatei: .clinerules (schnell)
+
+Ordner: .clinerules/ mit mehreren .md Dateien (pro‑tauglich, übersichtlich)
+
+Ich empfehle den Ordner.
+
+Struktur anlegen
+Im Repo‑Root:
+
+mkdir .clinerules
+New-Item -ItemType File -Force `
+  .clinerules\01-workflow.md, `
+  .clinerules\02-python-env.md, `
+  .clinerules\03-quality-gates.md, `
+  .clinerules\04-safety-deps.md, `
+  .clinerules\90-output-format.md
+Inhalt: Copy/Paste‑Rules (bewährt für Python + Windows)
+.clinerules/01-workflow.md
+
+# Workflow (Plan/Act)
+
+- Always start in Plan Mode for tasks touching more than 1 file.
+- In Plan Mode: produce a numbered plan (max 10 steps).
+  Each step must list affected files and the check to run afterwards.
+- In Act Mode: implement only ONE plan step per iteration unless I explicitly allow more.
+- No scope creep: if new work is discovered, return to Plan Mode and update the plan.
+.clinerules/02-python-env.md
+
+# Python Environment (Windows)
+
+- Assume Windows + PowerShell.
+- Never edit anything inside .venv/ and never read ignored files.
+- Use the project venv executables explicitly when running commands:
+  - .\.venv\Scripts\python.exe
+  - .\.venv\Scripts\ruff.exe
+- Preferred quality gate command:
+  - .\scripts\check.ps1
+- If interpreter confusion occurs, first run:
+  - .\.venv\Scripts\python.exe -c "import sys; print(sys.executable)"
+.clinerules/03-quality-gates.md
+
+# Quality Gates
+
+- New behavior requires tests.
+- Bug fixes require a regression test (would fail before fix).
+- Before claiming "done", always propose running:
+  - .\scripts\check.ps1
+- If the gate fails: fix ONLY what is needed to make it pass. No other improvements.
+.clinerules/04-safety-deps.md
+
+# Safety & Dependencies
+
+- Do not add new dependencies unless I explicitly approve.
+- Do not change configuration files (pyproject.toml, CI, pre-commit) without asking first.
+- Never store or print secrets.
+- Only operate within the workspace; do not access files outside the repo.
+.clinerules/90-output-format.md
+
+# Output Format (for transparency)
+
+After each Act Mode step:
+1) List exactly which files changed.
+2) Summarize what changed in 3-6 bullets.
+3) Propose exactly ONE command to run next (usually .\scripts\check.ps1).
+4) If errors occur: quote only the relevant error section and propose the minimal fix.
+Pro‑Hinweis: Halte Rules kurz und konfliktfrei. Wenn du dich zweimal beim selben Punkt wiederholen musst („keine Neben‑Refactors“, „lauf check.ps1“), gehört es in die Rules.
+
+11.3 Memory Bank einführen (Langzeitgedächtnis im Repo)
+Wenn du mehrere Sessions, Features oder Refactors hast, lohnt sich die Memory Bank sofort.
+
+Struktur anlegen
+mkdir memory-bank
+New-Item -ItemType File -Force `
+  memory-bank\projectbrief.md, `
+  memory-bank\productContext.md, `
+  memory-bank\activeContext.md, `
+  memory-bank\systemPatterns.md, `
+  memory-bank\techContext.md, `
+  memory-bank\progress.md
+Templates (kurz, aber maximal nützlich)
+memory-bank/projectbrief.md
+
+# Project Brief
+- Purpose:
+- Scope (what it does):
+- Non-goals:
+- Definition of Done (summary):
+memory-bank/techContext.md (wichtigste Datei)
+
+# Tech Context (Windows)
+
+- OS: Windows, shell: PowerShell
+- Python: 3.xx
+- Venv: .venv/ in repo root
+- Quality gate:
+  - .\scripts\check.ps1
+- Key commands:
+  - .\.venv\Scripts\python.exe -m pip install -U ruff pytest
+- Testing:
+  - pytest, tests in /tests
+- Lint/format:
+  - Ruff configured in pyproject.toml
+memory-bank/systemPatterns.md
+
+# System Patterns
+- Repo layout:
+- Where core logic lives:
+- Where IO/CLI lives:
+- Error handling conventions:
+- Public APIs that must not break:
+memory-bank/activeContext.md
+
+# Active Context
+- Current goal:
+- Current branch:
+- Next 1-3 steps:
+- Open questions/risks:
+memory-bank/progress.md
+
+# Progress
+## Done
+- ...
+
+## In progress
+- ...
+
+## Next
+- ...
+
+## Known issues / tech debt
+- ...
+productContext.md kannst du kurz halten: Zielgruppe, typische Workflows, Output‑Ansprüche.
+
+11.4 Session‑Ritual (damit Memory wirklich wirkt)
+Das ist die Routine, die du bei jedem neuen Cline‑Task machst:
+
+Start einer Session
+
+Cline (Plan Mode):
+
+„Lies DEVELOPMENT.md, .clinerules/* und memory-bank/*.“
+
+„Fass in maximal 10 Zeilen zusammen, wie du in diesem Repo arbeitest (Quality Gate, wichtige Dateien, aktuelle Ziele).“
+
+Dann erst: Plan für die konkrete Aufgabe.
+
+Während der Arbeit
+
+Nach jedem Act‑Schritt: .\scripts\check.ps1
+
+Nach jedem Commit/Meilenstein: memory-bank/progress.md und activeContext.md aktualisieren lassen (kurz!).
+
+Wenn es „driftet“
+
+Neuer Task, mit kurzem Zusammenfassungs‑Prompt:
+
+„Schreibe 8 Zeilen Status in memory-bank/activeContext.md und progress.md und starte dann mit einem frischen Plan.“
+
+So hältst du den Chat klein, aber das Projektwissen groß.
+
+Ergebnis von Punkt 11
+Wenn Punkt 11 steht, hast du ein Repo, das Cline dauerhaft gut „führt“:
+
+.clineignore verhindert Kontextmüll
+
+.clinerules erzwingt Arbeitsweise + Grenzen
+
+memory-bank/ hält Architektur/Commands/Status stabil über Sessions
+
+Wenn du „Weiter“ schreibst, mache ich mit Punkt 12: Einsatz im echten Repo + Troubleshooting‑Leiter weiter (Branch‑Workflow, PR‑Texte, Konflikte, und eine kurze Diagnose‑Checkliste für Windows/Cline/Terminal/venv).
+
+Du:
+Weiter 
+ChatGPT:
+Reasoned for 4m 38s
+Punkt 12: Einsatz im echten Repo + Troubleshooting‑Leiter (Windows / VS Code / Cline / Python)
+Ziel dieses Punkts: Du setzt den ganzen Workflow jetzt „in echt“ ein – mit Branches, kleinen Commits, PR‑Texten, konfliktarmem Arbeiten – und du hast eine kurze, zuverlässige Fehlerleiter für die typischen Windows-/Cline‑Probleme (Interpreter, venv, Terminal‑Output, Quoting).
+
+12.1 Der Standard‑Flow im echten Repo (Issue → Branch → Plan → Act → Gate → PR)
+1) Branch pro Aufgabe
+
+git checkout main
+git pull
+git checkout -b feature/<kurz>   # oder fix/<kurz>
+2) Baseline prüfen (wichtig)
+Bevor Cline irgendwas macht:
+
+.\scripts\check.ps1
+Wenn das schon rot ist: erst Baseline fixen (sonst debuggt Cline später „falsche Ursachen“).
+
+3) Cline Plan Mode
+Prompt‑Template:
+
+Plan Mode.
+Ziel: …
+Akzeptanzkriterien: …
+Nicht‑Ziele: …
+Lies nur die relevanten Dateien (ich verlinke sie) und erstelle einen Plan (max 10 Schritte).
+Jeder Schritt: betroffene Dateien + danach .\scripts\check.ps1.
+Keine Änderungen.
+
+4) Plan prüfen und härten
+Du prüfst vor allem:
+
+Ist der Plan in kleine Schritte teilbar?
+
+Gibt es Tests/Regressionen?
+
+Wird Scope sauber begrenzt?
+
+Gibt es Konfig‑Änderungen? (nur mit Absprache)
+
+5) Cline Act Mode, strikt in Mini‑Schritten
+Prompt‑Template:
+
+Act Mode. Implementiere ausschließlich Schritt 1 aus dem Plan.
+Keine Neben‑Refactors, keine neuen Dependencies.
+Danach: führe .\scripts\check.ps1 aus (erst nach meiner Freigabe).
+
+6) Nach jedem grünen Block: Commit
+
+git status
+git add -A
+git commit -m "feat: <kurz und konkret>"
+7) PR vorbereiten
+Wenn alles grün und sinnvoll geschnitten ist: PR erstellen.
+
+12.2 Commit‑Disziplin (damit KI‑Änderungen reviewbar bleiben)
+Praktische Regeln, die sich bewähren:
+
+Ein Commit soll idealerweise eine logische Änderung enthalten:
+
+„Core‑Funktion + Tests“
+
+„CLI‑Flag + Tests“
+
+Wenn Cline einen größeren Diff produziert:
+
+Zurückrollen (Checkpoint oder Git restore)
+
+In kleineren Schritten neu machen
+
+Keine „Reformatierung des ganzen Repos“ in einem Feature‑Commit.
+
+Commit‑Message‑Schema (einfach und effektiv):
+
+feat(core): ...
+
+fix(cli): ...
+
+test: ...
+
+chore: ...
+
+12.3 PR‑Text automatisch erzeugen lassen (ohne Ownership abzugeben)
+PR‑Beschreibung schreiben lassen (Plan Mode):
+
+Plan Mode.
+Schreibe eine PR‑Beschreibung mit: Motivation, Änderungen (bullets), Tests (wie ausgeführt), Risiken/Notes.
+
+Review‑Checkliste für dich (5 Minuten)
+
+Passt das Verhalten zu den Akzeptanzkriterien?
+
+Sind Tests sinnvoll (würden sie wirklich failen, wenn es kaputt ist)?
+
+Wurde Scope eingehalten (keine „Nebenarbeiten“)?
+
+Ist .\scripts\check.ps1 grün?
+
+Sind Änderungen gut geschnitten (nicht ein riesiger KI‑Commit)?
+
+12.4 Merge‑Konflikte sauber lösen (Cline als Helfer, nicht als Umbauer)
+Wenn Konflikte auftreten:
+
+Status checken:
+
+git status
+Konfliktdateien gezielt an Cline geben und Scope einschränken:
+
+Act Mode.
+Löse ausschließlich die Merge‑Konfliktmarker in diesen Dateien.
+Keine weiteren Refactors, keine Umbenennungen.
+Danach: .\scripts\check.ps1.
+
+Nach dem Fix:
+
+git add -A
+git commit -m "chore: resolve merge conflicts"
+Wenn check.ps1 danach rot ist: minimal fixen, nicht „architektonisch aufräumen“.
+
+12.5 Refactor‑Sprints im echten Repo (kontrolliert statt chaotisch)
+Refactors sind der häufigste Ort, wo Agenten „zu viel“ tun. So bleibt es stabil:
+
+Refactor‑Spezifikation (du gibst das immer mit):
+
+Ziel: Was wird verbessert?
+
+Constraints:
+
+Public API unverändert
+
+Verhalten unverändert
+
+Tests müssen nach jedem Schritt grün sein
+
+Plan in Phasen:
+
+Phase 1: mechanische Umstrukturierung
+
+Phase 2: Vereinheitlichung/Naming (nur wenn nötig)
+
+Phase 3: Performance/Feinschliff (optional)
+
+Prompt (Plan Mode):
+
+Plan Mode. Refactor‑Ziel: …
+Constraints: keine API‑Änderung, Verhalten muss identisch bleiben.
+Plane in Phasen, jeder Schritt muss nach .\scripts\check.ps1 grün sein.
+
+Troubleshooting‑Leiter (Windows): schnell zur Ursache
+Wenn etwas „komisch“ ist, geh exakt so vor (Reihenfolge zählt).
+
+12.6 Stufe 1: Harte Fakten sammeln (2 Minuten)
+Im Repo‑Root:
+
+git status
+.\.venv\Scripts\python.exe -c "import sys; print(sys.executable)"
+.\.venv\Scripts\python.exe -m pip --version
+.\scripts\check.ps1
+Was du damit klärst:
+
+Working tree sauber oder nicht?
+
+Nutzt du wirklich die Repo‑venv?
+
+Ist das Quality Gate reproduzierbar rot oder grün?
+
+12.7 Stufe 2: „Falsche venv / falsches Python“ (häufigster Fehler)
+Symptome:
+
+pytest findet Pakete nicht
+
+ruff wird nicht gefunden
+
+Verhalten ist „anders als gestern“
+
+Fix‑Prinzip:
+
+Nutze konsequent venv‑Executables:
+
+.\.venv\Scripts\python.exe …
+
+.\.venv\Scripts\ruff.exe …
+
+In VS Code: Interpreter neu wählen (Python: Select Interpreter) und .venv setzen.
+
+12.8 Stufe 3: Cline kann Terminal‑Output nicht lesen / hängt
+Symptome:
+
+Cline wartet ewig auf Output
+
+Commands laufen, aber Cline „sieht“ das Ergebnis nicht
+
+Fix‑Schritte:
+
+VS Code neu starten
+
+In Cline Settings: Terminal Execution Mode auf Background Exec
+
+Wenn Commands mit vielen Anführungszeichen scheitern:
+
+Keine Inline‑Kommandos mit komplexem Quoting verwenden
+
+Stattdessen Skripte ausführen (.\scripts\check.ps1), oder ein temporäres .py Script statt python -c "..."
+
+12.9 Stufe 4: Quoting‑Probleme (Windows‑Kante)
+Symptome:
+
+python -c "..." oder ähnliche Befehle brechen nur unter Cline/Background Exec
+
+Ausgaben wirken „escaped“ oder zerschossen
+
+Stabiler Workaround:
+
+Schreib Diagnosen in eine Datei:
+
+scripts/diag.py und dann .\.venv\Scripts\python.exe scripts\diag.py
+
+Halte Cline‑Commands „quote‑arm“:
+
+Lieber .\scripts\check.ps1 als lange, gequotete Einzeiler
+
+12.10 Stufe 5: Performance / „Cline wird unpräzise“
+Symptome:
+
+Cline liest zu viel
+
+Antworten werden unsauber, Scope driftet
+
+Fix‑Prinzip:
+
+.clineignore erweitern (Caches, Builds, Datenfiles, Logs)
+
+Aufgaben kleiner schneiden (max 1–3 Dateien pro Iteration)
+
+Neuen Task starten und Status in memory-bank/activeContext.md / progress.md festhalten
+
+Diagnose‑Prompt (Copy/Paste für Cline)
+Wenn du willst, dass Cline sich strukturiert selbst debuggt (am besten in Plan Mode):
+
+Plan Mode. Diagnose unter Windows.
+Ziel: herausfinden, warum Tool‑Runs/venv/Terminal nicht korrekt funktionieren.
+
+Nenne die 3 wichtigsten Checks, die du als erstes machen willst.
+
+Gehe davon aus, dass die Wahrheit .\scripts\check.ps1 ist.
+
+Wenn du Commands vorschlägst: nutze ausschließlich .venv\\Scripts\\python.exe und .\scripts\check.ps1.
+
+Erstelle danach einen Fix‑Plan in max 6 Schritten. Keine Codeänderungen.
+
+Ergebnis von Punkt 12
+Wenn Punkt 12 sitzt, kannst du Cline in echten Repos produktiv einsetzen, ohne Kontrolle zu verlieren:
+
+Branch‑basiert, reviewbar, kleine Commits
+
+Plan/Act als Standardritual
+
+check.ps1 als objektive Wahrheit
+
+Merge‑Konflikte und Refactors kontrolliert
+
+Windows‑Troubleshooting als kurze, reproduzierbare Leiter
+
+Wenn du als nächstes möchtest, kann ich dir aus diesen 12 Punkten auch eine noch kürzere „Daily Routine“ (10 Zeilen) formulieren, die du dir oben in DEVELOPMENT.md als Reminder hinpackst.
+
+Du:
+Ja
+ChatGPT:
+Reasoned for 2m 19s
+Hier ist eine kompakte Daily Routine (10 Zeilen), die du ganz oben in DEVELOPMENT.md einfügen kannst:
+
+## Daily Routine (Cline + Python, Windows)
+
+1) Repo öffnen (C:\dev\projects\...), `git status` prüfen (clean bevorzugt).
+2) In Feature-Branch wechseln/erstellen.
+3) Baseline: `.\scripts\check.ps1` (muss grün sein, bevor KI ändert).
+4) Cline starten → Plan Mode: Ziel + Akzeptanz + Nicht-Ziele → Plan (max 10 Schritte).
+5) Plan prüfen (Scope, Tests, Risiken). Erst dann Act Mode.
+6) Act Mode: immer nur 1 Plan-Schritt umsetzen lassen (keine Neben-Refactors).
+7) Nach jedem Schritt: `.\scripts\check.ps1` (rot → minimal fixen, keine Extras).
+8) Wenn grün: kleiner Commit (logisch geschnitten).
+9) Wenn Kontext/Scope driftet: Plan Mode, Plan nachschärfen oder neuer Task + Status in memory-bank.
+10) PR: Cline schreibt PR-Text, du machst Review + finaler `.\scripts\check.ps1`.
