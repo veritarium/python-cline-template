@@ -1,0 +1,21 @@
+# Virtual env + caches
+.venv/
+__pycache__/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.pyright/
+
+# Build artifacts
+build/
+dist/
+*.egg-info/
+
+# Coverage / reports
+.coverage
+htmlcov/
+*.log
+
+# Secrets / env
+.env
+.env.*

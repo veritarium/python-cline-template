@@ -1,0 +1,14 @@
+# Development dependencies for Dev_Proj_Cline_Setup
+# Install with: python -m pip install -r requirements-dev.txt
+
+# Code quality and formatting
+ruff
+
+# Testing framework
+pytest
+
+# Optional development tools (uncomment if needed)
+# black
+# mypy
+# pytest-cov
+# ipython
