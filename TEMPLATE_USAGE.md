@@ -37,6 +37,20 @@ This repository is a template for Python + VS Code + Cline on Windows.
 
    Once selected, VS Code will use the virtual environment for IntelliSense, linting, testing, and formatting.
 
+### Linux / code‑server notes
+
+- **PowerShell scripts:** On Linux, prefix the script calls with `pwsh` (e.g., `pwsh ./scripts/bootstrap.ps1`).  
+  If pwsh is not installed, you can install it via `sudo apt‑get install -y powershell` or use the Bash fallback `scripts/check.sh`.
+
+- **Virtual environment paths:** The Python interpreter inside the virtual environment is located at `.venv/bin/python` (instead of `.venv\Scripts\python.exe` on Windows).
+
+- **Missing python3‑venv:** If `python3 -m venv .venv` fails, install the system package:
+  ```bash
+  sudo apt‑get install -y python3‑venv
+  ```
+
+- **Bash fallback:** A Bash version of the quality‑gate script is available as `scripts/check.sh`. It can be used on systems without PowerShell.
+
 4) **Verify** everything works:
    ```powershell
    .\scripts\check.ps1

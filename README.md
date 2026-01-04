@@ -4,6 +4,8 @@ A Python project demonstrating proper setup with virtual environment, testing, a
 
 ## Use this template (recommended workflow)
 
+### Windows Quickstart
+
 1. **Use this template** to create a new repository on GitHub.
 2. **Clone** your new repository locally:
    ```powershell
@@ -21,6 +23,45 @@ A Python project demonstrating proper setup with virtual environment, testing, a
    ```
 5. **Commit and push** the bootstrap changes:
    ```powershell
+   git add -A
+   git commit -m "chore: bootstrap project"
+   git push
+   ```
+
+### Linux / code‑server Quickstart
+
+**Prerequisites**
+
+Ensure the following packages are installed:
+
+- `python3`, `python3‑venv`, `python3‑pip`
+- (Optional) `pwsh` (PowerShell) – required if you want to run the PowerShell scripts directly.
+
+**Steps**
+
+1. **Clone** your new repository:
+   ```bash
+   git clone <repository‑url>
+   cd <project‑folder>
+   ```
+
+2. **Bootstrap** the project (with pwsh):
+   ```bash
+   pwsh ./scripts/bootstrap.ps1 -SetupVenv -NonInteractive
+   ```
+   *(If pwsh is not installed, you can create the venv manually: `python3 -m venv .venv` and install dependencies with `./.venv/bin/python -m pip install -r requirements‑dev.txt`.)*
+
+3. **Verify** the quality gate:
+   ```bash
+   pwsh ./scripts/check.ps1
+   ```
+   *(Alternative without pwsh: `bash ./scripts/check.sh`)*
+
+4. **VS Code / code‑server setup:**  
+   Open the command palette (Ctrl+Shift+P / Cmd+Shift+P), select **“Python: Select Interpreter”**, and choose the interpreter from `.venv/bin/python`.
+
+5. **Commit** the bootstrap changes:
+   ```bash
    git add -A
    git commit -m "chore: bootstrap project"
    git push
