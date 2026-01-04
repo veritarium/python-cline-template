@@ -1,4 +1,4 @@
-# __PROJECT_NAME__
+# python-cline-template
 
 A Python project demonstrating proper setup with virtual environment, testing, and code quality tools.
 
@@ -136,7 +136,7 @@ ruff check --fix .
 ## Project Structure
 
 ```
-__PROJECT_NAME__/
+python-cline-template/
 ├── .venv/                 # Python virtual environment (gitignored)
 ├── .vscode/              # VS Code configuration
 │   └── settings.json    # Editor settings for Python development

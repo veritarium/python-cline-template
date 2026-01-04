@@ -5,8 +5,17 @@
 $ErrorActionPreference = "Stop"
 
 $RepoRoot = Split-Path -Parent $PSScriptRoot
-$VenvPython = Join-Path $RepoRoot ".venv\Scripts\python.exe"
-$VenvRuff   = Join-Path $RepoRoot ".venv\Scripts\ruff.exe"
+
+if ($IsWindows) {
+    $VenvPython = Join-Path $RepoRoot ".venv\Scripts\python.exe"
+    $VenvHint   = "Erstelle die venv im Repo-Root:  py -m venv .venv"
+} else {
+    # Linux / macOS
+    $VenvPython = Join-Path $RepoRoot ".venv/bin/python"
+    $VenvHint   = "Erstelle die venv im Repo-Root:  python3 -m venv .venv"
+}
+
+# $VenvRuff wird nicht mehr benötigt, da ruff über python -m ruff läuft.
 
 function Assert-FileExists([string]$Path, [string]$Hint) {
     if (-not (Test-Path $Path)) {
@@ -28,11 +37,10 @@ function Run-Step([string]$Title, [string]$Exe, [string[]]$Arguments) {
     }
 }
 
-Assert-FileExists $VenvPython "Erstelle die venv im Repo-Root:  py -m venv .venv"
-Assert-FileExists $VenvRuff   "Installiere ruff in der venv:      .\.venv\Scripts\python.exe -m pip install -U ruff"
+Assert-FileExists $VenvPython $VenvHint
 
-Run-Step "Ruff (lint + fix)" $VenvRuff @("check", ".", "--fix")
-Run-Step "Ruff (format)"     $VenvRuff @("format", ".")
+Run-Step "Ruff (lint + fix)" $VenvPython @("-m", "ruff", "check", ".", "--fix")
+Run-Step "Ruff (format)"     $VenvPython @("-m", "ruff", "format", ".")
 
 # Optional: danach direkt testen (empfohlen)
 Run-Step "Pytest" $VenvPython @("-m", "pytest")

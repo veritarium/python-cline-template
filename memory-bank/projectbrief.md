@@ -4,4 +4,4 @@
 - Non-goals: Production deployment, complex application logic
 - Definition of Done (summary): Feature implemented, tests pass, quality gate green, no side-refactors
 - Template note: Created from python-cline-template
-- Project name: __PROJECT_NAME__
+- Project name: python-cline-template

@@ -1940,7 +1940,7 @@ Die Schritte, die Cline typischerweise nicht sauber/zuverlässig erledigen kann 
 Überblick: neue Punkte ab Punkt 13 (für euren Ablauf)
 
 Punkt 13 – Template‑Repo “entpersonalisieren” und vorbereiten
-Alt‑Namen/Pfade entfernen, Template‑Identität klar machen, Platzhalter __PROJECT_NAME__ dort einführen, wo Bootstrap später zuverlässig greifen soll (Memory Bank + ggf. README‑Vorlage). Keine Codeänderungen an devproj.
+Alt‑Namen/Pfade entfernen, Template‑Identität klar machen, Platzhalter python-cline-template dort einführen, wo Bootstrap später zuverlässig greifen soll (Memory Bank + ggf. README‑Vorlage). Keine Codeänderungen an devproj.
 
  
 
@@ -1984,7 +1984,7 @@ Deliverables (was am Ende existieren/korrekt sein muss)
 
 Keine hartcodierten Pfade/Alt‑Namen mehr in projektinternen Kontextdateien (Memory Bank, TechContext etc.).
 
-Memory‑Bank Dateien enthalten an sinnvollen Stellen __PROJECT_NAME__ (damit Bootstrap später sicher ersetzen kann).
+Memory‑Bank Dateien enthalten an sinnvollen Stellen python-cline-template (damit Bootstrap später sicher ersetzen kann).
 
 Ein README‑Setup, das Template klar erklärt, ohne sich selbst zu „personalisieren“.
 
@@ -2015,7 +2015,7 @@ Wo kommt python-cline-template noch vor?
 
 Wo kommt der harte Pfad C:\dev\projects\python-cline-template oder ähnliche lokale Pfade vor?
 
-In welchen memory-bank/*.md Dateien sollen wir __PROJECT_NAME__ als Platzhalter einführen, damit ein späteres Bootstrap-Skript zuverlässig den Projektnamen setzen kann?
+In welchen memory-bank/*.md Dateien sollen wir python-cline-template als Platzhalter einführen, damit ein späteres Bootstrap-Skript zuverlässig den Projektnamen setzen kann?
 
 Welche README-Änderungen sind sinnvoll, damit das Repo als Template erklärt wird (ohne später beim Bootstrap “falsch” ersetzt zu werden)?
 
@@ -2072,7 +2072,7 @@ durch „Suche nach altem Projektnamen“ fragil wird.
 
 Deshalb setzen wir auf:
 
-Platzhalter __PROJECT_NAME__ in Memory/Doku (stabil),
+Platzhalter python-cline-template in Memory/Doku (stabil),
 
 und nur als Fallback: Ersetzen alter/historischer Namen, aber sehr gezielt.
 
@@ -2113,7 +2113,7 @@ ProjectName default = Ordnername des Repo-Root
 
 Nur Textdateien anfassen: .md, .txt, .toml, .json, .yml, .yaml
 
-In Textdateien __PROJECT_NAME__ durch ProjectName ersetzen
+In Textdateien python-cline-template durch ProjectName ersetzen
 
 Ignoriere: .git/, .venv/, pycache/, .pytest_cache/, .ruff_cache/
 
@@ -2381,13 +2381,13 @@ Das vermeiden wir so:
 
 Wir schreiben in der Template‑Doku nicht „python-cline-template“, sondern nutzen Platzhalter:
 
-__PROJECT_NAME__
+python-cline-template
 
 Und wir halten Template‑Doku bewusst generisch (nicht „python-cline-template überall“), sondern:
 
 „Dieses Repo ist eine Vorlage…“
 
-Damit kann Bootstrap problemlos __PROJECT_NAME__ ersetzen, ohne “eigene Identität” zu zerstören.
+Damit kann Bootstrap problemlos python-cline-template ersetzen, ohne “eigene Identität” zu zerstören.
 
 Deliverables
 
@@ -2395,7 +2395,7 @@ README enthält eine kurze „Use this template“ Sektion
 
 Neue Datei TEMPLATE_USAGE.md (oder BOOTSTRAP.md) erklärt den Ablauf in 10–20 Zeilen
 
-Memory Bank: projectbrief.md und activeContext.md sind als Template formuliert und enthalten __PROJECT_NAME__ (oder zumindest keine alten Namen)
+Memory Bank: projectbrief.md und activeContext.md sind als Template formuliert und enthalten python-cline-template (oder zumindest keine alten Namen)
 
 Akzeptanzkriterien
 
@@ -2422,7 +2422,7 @@ Welche README-Änderung nötig ist (kurz, 8–12 Zeilen).
 
 Ob eine extra Datei TEMPLATE_USAGE.md oder BOOTSTRAP.md sinnvoll ist (eine wählen).
 
-Welche Memory-Bank Dateien als Template formuliert werden sollen, inkl. __PROJECT_NAME__.
+Welche Memory-Bank Dateien als Template formuliert werden sollen, inkl. python-cline-template.
 
 Constraints:
 
@@ -2607,7 +2607,7 @@ Wenn etwas schiefgeht: typische Fixes
 
 Bootstrap ändert .py → Script muss .py strikt ausschließen (Filter prüfen)
 
-Bootstrap ersetzt „zu viel“ im README → nutze Platzhalter __PROJECT_NAME__ statt Template‑Name
+Bootstrap ersetzt „zu viel“ im README → nutze Platzhalter python-cline-template statt Template‑Name
 
 check.ps1 rot → fehlt requirements-dev.txt oder ruff/pytest nicht installiert → SetupVenv‑Teil prüfen
 
@@ -3112,7 +3112,7 @@ Hier ist die komprimierte Master‑Liste (Punkt 13–20), so dass du sie Cline a
 Master‑Liste Punkt 13–20
 
 Punkt 13 – Template‑Repo vorbereiten und entpersonalisieren
-Alte Namen/Pfade entfernen, Memory‑Bank als Template formulieren, __PROJECT_NAME__ als Platzhalter einführen, keine .py Änderungen.
+Alte Namen/Pfade entfernen, Memory‑Bank als Template formulieren, python-cline-template als Platzhalter einführen, keine .py Änderungen.
 
  
 

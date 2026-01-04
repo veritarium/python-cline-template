@@ -1,4 +1,4 @@
-# Bootstrap Guide for __PROJECT_NAME__
+# Bootstrap Guide for python-cline-template
 
 This document describes how to bootstrap the development environment for this project.
 
@@ -87,7 +87,7 @@ This project implements a structured Cline workflow:
 ## Project Structure
 
 ```
-__PROJECT_NAME__/
+python-cline-template/
 ├── .venv/                 # Python virtual environment (gitignored)
 ├── devproj/              # Main package
 │   ├── __init__.py       # Package metadata

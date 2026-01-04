@@ -15,6 +15,27 @@ param(
 
 $ErrorActionPreference = "Stop"
 
+# --- OS detection and platform-specific paths ---
+if ($IsWindows) {
+    $VenvPython = ".venv\Scripts\python.exe"
+    # Check if py is available, otherwise use python
+    if (Get-Command "py" -ErrorAction SilentlyContinue) {
+        $VenvCommand = "py"
+    } else {
+        $VenvCommand = "python"
+    }
+} else {
+    # Linux / macOS
+    $VenvPython = ".venv/bin/python"
+    if (Get-Command "python3" -ErrorAction SilentlyContinue) {
+        $VenvCommand = "python3"
+    } else {
+        $VenvCommand = "python"
+    }
+}
+
+$CheckCommand = if ($IsWindows) { ".\scripts\check.ps1" } else { "pwsh ./scripts\check.ps1" }
+
 # --- Helper functions ---
 function Write-Info([string]$Message) {
     Write-Host "[INFO] $Message" -ForegroundColor Cyan
@@ -54,11 +75,11 @@ if ($ProjectName -match '[<>:"/\\|?*]') {
 }
 
 # --- Text file extensions to process ---
-$TextExtensions = @('.md', '.txt', '.toml', '.json', '.yml', '.yaml', '.ps1', '.yml', '.yaml')
-# Note: .ps1 included because it may contain __PROJECT_NAME__ in comments
+$TextExtensions = @('.md', '.txt', '.toml', '.json', '.yml', '.yaml')
+# Note: .ps1 removed to avoid modifying script files
 
 # --- Directories to ignore ---
-$IgnoreDirs = @('.git', '.venv', '__pycache__', '.pytest_cache', '.ruff_cache', '.mypy_cache', '.pyright', 'build', 'dist')
+$IgnoreDirs = @('.git', '.venv', '__pycache__', '.pytest_cache', '.ruff_cache', '.mypy_cache', '.pyright', 'build', 'dist', 'scripts')
 
 # --- Step 1: Replace __PROJECT_NAME__ in text files ---
 Write-Info "Step 1: Replacing __PROJECT_NAME__ with '$ProjectName' in text files"
@@ -68,7 +89,8 @@ Get-ChildItem -Recurse -File | Where-Object {
     $ext = $_.Extension.ToLower()
     $dir = $_.DirectoryName
     $shouldProcess = $TextExtensions -contains $ext -and
-                     -not ($IgnoreDirs | Where-Object { $dir -match $_ })
+                     -not ($IgnoreDirs | Where-Object { $dir -match $_ }) -and
+                     -not ($_.Name -like 'requirements*.txt')
     return $shouldProcess
 } | ForEach-Object {
     $content = Get-Content $_.FullName -Raw
@@ -100,15 +122,14 @@ if ($SetupVenv) {
         }
         
         Write-Info "Creating .venv..."
-        py -m venv .venv
+        & $VenvCommand -m venv .venv
         if (-not $?) {
             Write-Error "Failed to create .venv"
             exit 1
         }
     }
     
-    # Ensure we use the venv Python
-    $VenvPython = ".venv\Scripts\python.exe"
+    # Ensure we use the venv Python (path is OS‑dependent)
     if (-not (Test-Path $VenvPython)) {
         Write-Error "$VenvPython not found"
         exit 1
@@ -168,5 +189,5 @@ if (-not $SetupVenv) {
     Write-Host "   .\scripts\bootstrap.ps1 -SetupVenv"
 }
 Write-Host "To verify everything works:"
-Write-Host "   .\scripts\check.ps1"
+Write-Host "   $CheckCommand"
 Write-Host ""

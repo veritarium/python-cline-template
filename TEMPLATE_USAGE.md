@@ -20,17 +20,29 @@ This repository is a template for Python + VS Code + Cline on Windows.
    .\scripts\bootstrap.ps1 -SetupVenv
    ```
    This will:
-   - Replace `__PROJECT_NAME__` in text files with your project name
+   - Replace `python-cline-template` in text files with your project name
    - Create `.venv` (if it doesn't exist)
    - Install development tools (ruff, pytest)
    - Run the quality gate (`.\scripts\check.ps1`)
 
-3) **Verify** everything works:
+3) **VS Code / code‑server Setup**
+
+   After bootstrapping, select the correct Python interpreter in VS Code:
+
+   1. Open the command palette (Ctrl+Shift+P / Cmd+Shift+P).
+   2. Type "Python: Select Interpreter" and select the command.
+   3. Choose the interpreter from the `.venv` folder:
+      - **Windows**: `./.venv/Scripts/python.exe`
+      - **Linux/macOS**: `./.venv/bin/python`
+
+   Once selected, VS Code will use the virtual environment for IntelliSense, linting, testing, and formatting.
+
+4) **Verify** everything works:
    ```powershell
    .\scripts\check.ps1
    ```
 
-4) **Commit** the bootstrap changes:
+5) **Commit** the bootstrap changes:
    ```powershell
    git add -A
    git commit -m "chore: bootstrap project"
