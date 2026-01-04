@@ -25,11 +25,26 @@ cd ~/dev/projects
 git clone https://github.com/veritarium/KW01-UBUNTU-SYS.git
 cd KW01-UBUNTU-SYS
 
+pwd
+python3 --version
+git --version
+pwsh --version || true
+
 sudo apt-get update
 sudo apt-get install -y python3-venv python3-pip
 
+ls -la scripts
+
 pwsh ./scripts/bootstrap.ps1 -SetupVenv -NonInteractive
+
 pwsh ./scripts/check.ps1
+
+bash ./scripts/check.sh
+
+git ls-files | grep -i "\.venv" || true
+
+git status
+git diff --name-only
 
 git add -A
 git commit -m "chore: bootstrap project"
@@ -62,8 +77,15 @@ git clone https://github.com/veritarium/KW01-WINDOWS-SYS.git
 cd KW01-WINDOWS-SYS
 
 .\scripts\bootstrap.ps1 -SetupVenv -NonInteractive
+
+#Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+#.\scripts\bootstrap.ps1 -SetupVenv -NonInteractive
+
 .\scripts\check.ps1
 
+git ls-files | findstr /I ".venv"
+
+git status
 git add -A
 git commit -m "chore: bootstrap project"
 git push -u origin main
@@ -103,34 +125,6 @@ This project serves as a template for Python development with modern tooling inc
 - Python 3.12 or higher
 - Git (for version control)
 
-### Installation
-
-1. **Clone the repository** (if applicable):
-   ```bash
-   git clone <repository-url>
-   cd <project-folder>
-   ```
-
-2. **Set up virtual environment**:
-   ```bash
-   python -m venv .venv
-   ```
-
-3. **Activate the virtual environment**:
-   - **Windows**:
-     ```bash
-     .venv\Scripts\activate
-     ```
-   - **macOS/Linux**:
-     ```bash
-     source .venv/bin/activate
-     ```
-
-4. **Install dependencies**:
-   ```bash
-   pip install -r requirements.txt
-   ```
-
 ### Development Setup
 
 The project includes VS Code configuration for optimal development:
@@ -139,6 +133,8 @@ The project includes VS Code configuration for optimal development:
 - **Format on save** with ruff
 - **Pytest integration** for testing
 - **Code actions** for automatic fixes
+
+For a quick setup with virtual environment creation, dependency installation, and quality checks, see the [Quickstart guide above](#use-this-template-recommended-workflow).
 
 ## Usage
 
