@@ -2,32 +2,33 @@
 
 A Python project demonstrating proper setup with virtual environment, testing, and code quality tools.
 
-## Use this template
+## Use this template (recommended workflow)
 
-This repository is a template for Python + VS Code + Cline on Windows.
+1. **Use this template** to create a new repository on GitHub.
+2. **Clone** your new repository locally:
+   ```powershell
+   git clone <repository-url>
+   cd <project-folder>
+   ```
+3. **Bootstrap** the project with virtual environment setup:
+   ```powershell
+   .\scripts\bootstrap.ps1 -SetupVenv -NonInteractive
+   ```
+   *(Omit `-NonInteractive` if you want to be prompted for each step.)*
+4. **Verify** the setup passes the quality gate:
+   ```powershell
+   .\scripts\check.ps1
+   ```
+5. **Commit and push** the bootstrap changes:
+   ```powershell
+   git add -A
+   git commit -m "chore: bootstrap project"
+   git push
+   ```
 
-**Quick start:**
-1) Clone your new repository
-2) Run `.\scripts\bootstrap.ps1 -SetupVenv`
-3) Verify with `.\scripts\check.ps1`
-4) Commit changes
+**Standard option:** The Python package name stays `devproj`. Bootstrap adapts only project name, documentation, and memory bank.
 
-For detailed instructions, see [TEMPLATE_USAGE.md](TEMPLATE_USAGE.md).
-
-Standard option (recommended start):
-- The Python package name stays `devproj`.
-- Bootstrap adapts only project name / docs / memory.
-
-Steps after creating a repo from this template and cloning it:
-1) `.\scripts\bootstrap.ps1 -SetupVenv` (creates .venv, installs tools, runs quality gate)
-2) `.\scripts\check.ps1` (verifies everything works)
-3) `git add -A && git commit -m "chore: bootstrap project"`
-
-For documentation-only updates (no venv):
-- `.\scripts\bootstrap.ps1` (replaces __PROJECT_NAME__ in text files)
-
-See `scripts/bootstrap.ps1 -?` for all options.
-
+For details see [TEMPLATE_USAGE.md](TEMPLATE_USAGE.md).
 
 ## Project Overview
 
