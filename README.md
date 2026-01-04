@@ -4,68 +4,81 @@ A Python project demonstrating proper setup with virtual environment, testing, a
 
 ## Use this template (recommended workflow)
 
-### Windows Quickstart
+### Linux (Ubuntu / code‑server) – Beispiel: KW01‑UBUNTU‑SYS
 
-1. **Use this template** to create a new repository on GitHub.
-2. **Clone** your new repository locally:
-   ```powershell
-   git clone <repository-url>
-   cd <project-folder>
-   ```
-3. **Bootstrap** the project with virtual environment setup:
-   ```powershell
-   .\scripts\bootstrap.ps1 -SetupVenv -NonInteractive
-   ```
-   *(Omit `-NonInteractive` if you want to be prompted for each step.)*
-4. **Verify** the setup passes the quality gate:
-   ```powershell
-   .\scripts\check.ps1
-   ```
-5. **Commit and push** the bootstrap changes:
-   ```powershell
-   git add -A
-   git commit -m "chore: bootstrap project"
-   git push
-   ```
+**Prerequisites**  
+- `git`, `python3`, `python3‑venv`, `python3‑pip`  
+- Optional: `pwsh` (PowerShell) für die PowerShell‑Skripte.
 
-### Linux / code‑server Quickstart
+```bash
+mkdir -p ~/dev/projects/info
+cd ~/dev/projects
+git clone https://github.com/veritarium/KW01-UBUNTU-SYS.git
+cd KW01-UBUNTU-SYS
 
-**Prerequisites**
+pwd
+python3 --version
+git --version
+pwsh --version || true
 
-Ensure the following packages are installed:
+sudo apt-get update
+sudo apt-get install -y python3-venv python3-pip
 
-- `python3`, `python3‑venv`, `python3‑pip`
-- (Optional) `pwsh` (PowerShell) – required if you want to run the PowerShell scripts directly.
+ls -la scripts
 
-**Steps**
+pwsh ./scripts/bootstrap.ps1 -SetupVenv -NonInteractive
 
-1. **Clone** your new repository:
-   ```bash
-   git clone <repository‑url>
-   cd <project‑folder>
-   ```
+pwsh ./scripts/check.ps1
 
-2. **Bootstrap** the project (with pwsh):
-   ```bash
-   pwsh ./scripts/bootstrap.ps1 -SetupVenv -NonInteractive
-   ```
-   *(If pwsh is not installed, you can create the venv manually: `python3 -m venv .venv` and install dependencies with `./.venv/bin/python -m pip install -r requirements‑dev.txt`.)*
+bash ./scripts/check.sh
 
-3. **Verify** the quality gate:
-   ```bash
-   pwsh ./scripts/check.ps1
-   ```
-   *(Alternative without pwsh: `bash ./scripts/check.sh`)*
+git ls-files | grep -i "\.venv" || true
 
-4. **VS Code / code‑server setup:**  
-   Open the command palette (Ctrl+Shift+P / Cmd+Shift+P), select **“Python: Select Interpreter”**, and choose the interpreter from `.venv/bin/python`.
+git status
+git diff --name-only
 
-5. **Commit** the bootstrap changes:
-   ```bash
-   git add -A
-   git commit -m "chore: bootstrap project"
-   git push
-   ```
+git add -A
+git commit -m "chore: bootstrap project"
+git push
+```
+
+**Hinweise:**
+- Falls `git commit` mit „Author identity unknown“ fehlschlägt, führe diese Befehle aus:  
+  ```bash
+  git config --global user.name "Dein Name"
+  git config --global user.email "dein@mail.de"
+  ```
+- `bash ./scripts/check.sh` nur nutzen, wenn die Datei existiert (sie wird automatisch beim Bootstrap erstellt).
+
+### Windows – Beispiel: KW01‑WINDOWS‑SYS
+
+**Prerequisites**  
+- `git`, `Python 3.12+` (über den Microsoft Store oder python.org)  
+- PowerShell (bereits enthalten).
+
+```powershell
+cd C:\dev\projects
+git clone https://github.com/veritarium/KW01-WINDOWS-SYS.git
+cd KW01-WINDOWS-SYS
+
+.\scripts\bootstrap.ps1 -SetupVenv -NonInteractive
+
+#Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+#.\scripts\bootstrap.ps1 -SetupVenv -NonInteractive
+
+.\scripts\check.ps1
+
+git ls-files | findstr /I ".venv"
+
+git status
+git add -A
+git commit -m "chore: bootstrap project"
+git push -u origin main
+```
+
+**Hinweise:**
+- Falls PowerShell‑Skripte blockiert sind, entferne das Kommentarzeichen vor `Set-ExecutionPolicy` und führe den Bootstrap erneut aus.
+- Prüfe die CI auf GitHub unter **Actions** im neuen Repository.
 
 **Standard option:** The Python package name stays `devproj`. Bootstrap adapts only project name, documentation, and memory bank.
 
