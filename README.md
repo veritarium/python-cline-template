@@ -4,11 +4,20 @@ A Python project demonstrating proper setup with virtual environment, testing, a
 
 ## Use this template (recommended workflow)
 
-### Linux (Ubuntu / code‑server) – Beispiel: KW01‑UBUNTU‑SYS
+This template provides a cross‑platform setup for Python development. Below are quickstart guides for Linux and Windows.
 
-**Prerequisites**  
-- `git`, `python3`, `python3‑venv`, `python3‑pip`  
-- Optional: `pwsh` (PowerShell) für die PowerShell‑Skripte.
+### Linux (Ubuntu / code‑server) – Example: KW01‑UBUNTU‑SYS
+
+**Prerequisites**
+- `git`, `python3`, `python3‑venv`, `python3‑pip`
+- Optional: `pwsh` (PowerShell) for running the PowerShell scripts.
+
+**Steps**
+1. **Clone your repository**
+2. **Install system packages** (if not already present)
+3. **Bootstrap the project** (creates virtual environment, installs tools, runs quality gate)
+4. **Verify the setup** with the quality gate script
+5. **Commit and push** the bootstrap changes
 
 ```bash
 mkdir -p ~/dev/projects/info
@@ -16,45 +25,36 @@ cd ~/dev/projects
 git clone https://github.com/veritarium/KW01-UBUNTU-SYS.git
 cd KW01-UBUNTU-SYS
 
-pwd
-python3 --version
-git --version
-pwsh --version || true
-
 sudo apt-get update
 sudo apt-get install -y python3-venv python3-pip
 
-ls -la scripts
-
 pwsh ./scripts/bootstrap.ps1 -SetupVenv -NonInteractive
-
 pwsh ./scripts/check.ps1
-
-bash ./scripts/check.sh
-
-git ls-files | grep -i "\.venv" || true
-
-git status
-git diff --name-only
 
 git add -A
 git commit -m "chore: bootstrap project"
 git push
 ```
 
-**Hinweise:**
-- Falls `git commit` mit „Author identity unknown“ fehlschlägt, führe diese Befehle aus:  
+**Notes**
+- If `git commit` fails with “Author identity unknown”, configure your Git identity:
   ```bash
-  git config --global user.name "Dein Name"
-  git config --global user.email "dein@mail.de"
+  git config --global user.name "Your Name"
+  git config --global user.email "your@email.com"
   ```
-- `bash ./scripts/check.sh` nur nutzen, wenn die Datei existiert (sie wird automatisch beim Bootstrap erstellt).
+- Use `bash ./scripts/check.sh` only if the file exists (it is created during bootstrap).
 
-### Windows – Beispiel: KW01‑WINDOWS‑SYS
+### Windows – Example: KW01‑WINDOWS‑SYS
 
-**Prerequisites**  
-- `git`, `Python 3.12+` (über den Microsoft Store oder python.org)  
-- PowerShell (bereits enthalten).
+**Prerequisites**
+- `git`, `Python 3.12+` (via Microsoft Store or python.org)
+- PowerShell (already included)
+
+**Steps**
+1. **Clone your repository**
+2. **Bootstrap the project**
+3. **Verify the setup** with the quality gate script
+4. **Commit and push** the bootstrap changes
 
 ```powershell
 cd C:\dev\projects
@@ -62,23 +62,20 @@ git clone https://github.com/veritarium/KW01-WINDOWS-SYS.git
 cd KW01-WINDOWS-SYS
 
 .\scripts\bootstrap.ps1 -SetupVenv -NonInteractive
-
-#Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
-#.\scripts\bootstrap.ps1 -SetupVenv -NonInteractive
-
 .\scripts\check.ps1
 
-git ls-files | findstr /I ".venv"
-
-git status
 git add -A
 git commit -m "chore: bootstrap project"
 git push -u origin main
 ```
 
-**Hinweise:**
-- Falls PowerShell‑Skripte blockiert sind, entferne das Kommentarzeichen vor `Set-ExecutionPolicy` und führe den Bootstrap erneut aus.
-- Prüfe die CI auf GitHub unter **Actions** im neuen Repository.
+**Notes**
+- If PowerShell scripts are blocked, you may need to adjust the execution policy:
+  ```powershell
+  Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+  ```
+  Then run the bootstrap command again.
+- Check CI on GitHub under **Actions** in the new repository.
 
 **Standard option:** The Python package name stays `devproj`. Bootstrap adapts only project name, documentation, and memory bank.
 
