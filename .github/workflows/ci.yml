@@ -63,9 +63,10 @@ jobs:
           .\.venv\Scripts\python.exe -m pip install -U pip setuptools wheel
           if (Test-Path "requirements-dev.txt") {
             .\.venv\Scripts\python.exe -m pip install -r requirements-dev.txt
-          } else {
+          }
+          else {
             .\.venv\Scripts\python.exe -m pip install -U ruff pytest
-          fi
+          }
 
       # Run the repo's quality gate script (PowerShell)
       - name: Quality Gate (PowerShell script)
